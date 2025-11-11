@@ -61,8 +61,8 @@ CREATE TABLE tbl_equipos (
     Propietario_Equipo TEXT,
     Estado_Equipo ENUM('Activo','Inactivo','Mantenimiento','Dado de Baja'),
     Fecha_Ad_Equipo DATE,
-    Archivo_Equipo VARCHAR(255),
-    Tipo_Equipo VARCHAR(255)
+    Archivo_Equipo VARCHAR(255),FOREIGN KEY (Archivo_Equipo) REFERENCES tbl_archivo(Id_Archivo),
+    Tipo_Equipo VARCHAR(255), FOREIGN KEY (Tipo_Equipo) REFERENCES tbl_tipo_equipo(Id_Tipo_Equipo)
 );
 
 -- Tabla: Mantenimientos
