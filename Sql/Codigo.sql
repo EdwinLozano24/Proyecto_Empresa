@@ -74,10 +74,3 @@ CREATE TABLE tbl_historial (
     Id_Empleado INT foreign key references tbl_empleado(Id_Empleado)
 );
 
-INSERT INTO tbl_rol (Nombre_Rol, Descripcion_Rol) VALUES
-('Administrador', 'Rol con todos los permisos'),
-('Usuario', 'Rol con permisos limitados');
-
-INSERT INTO tbl_cargo (Nombre_Cargo, Descripcion_Cargo) VALUES
-('Tecnico', 'Responsable del mantenimiento de equipos'),
-('Gestor de Inventario', 'Encargado de la gestion del inventario de equipos');
