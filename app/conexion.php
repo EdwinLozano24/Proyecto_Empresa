@@ -36,3 +36,4 @@ function conectar(): PDO
         die('❌ Error de conexión: ' . $e->getMessage());
     }
 }
+//prueba
