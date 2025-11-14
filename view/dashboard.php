@@ -6,8 +6,8 @@
   <title>Dashboard Inventario - Gradezco</title>
   <?php
     // Usar el CSS estilizado para PQRS
-    $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/a.css';
-    $cssUrl = '/inventario_equipos/assets/css/a.css';
+    $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/Dashboard.css';
+    $cssUrl = '/inventario_equipos/assets/css/Dashboard.css';
     if (file_exists($cssPath)) {
         echo '<link rel="stylesheet" href="' . $cssUrl . '">';
     } else {
