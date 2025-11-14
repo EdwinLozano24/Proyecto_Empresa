@@ -1,43 +1,215 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: normal; /* Aquí puedes definir el peso de la fuente, por ejemplo: 400, 700, etc. */
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+}
 
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        .login-container {
-            background: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            width: 300px;
-        }
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-  
+
+body{
+    background-color: #000000;
+    background-image: url(/Assets/img/Login/chamaquita.jpeg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+main{
+    width: 100%;
+    padding: 20px;
+    margin: auto;
+    margin-top: 145px;
+}
+
+.contenedor__todo{
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
+    position: relative;
+}
+
+.caja__trasera{
+    width: 100%;
+    padding: 5px 1  0px;
+    display: flex;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    background-color: rgba(14, 165, 233, 0.5);
+    border-radius: 10px;
+}
+
+.caja__trasera div{
+    margin: 100px 40px;
+    color: #fff;
+    transition: all 500ms;
+}
+
+.caja__trasera div p,
+.caja__trasera button{
+    margin-top: 30px;
+}
+
+.caja__trasera div h3{
+    font-weight: 400;
+    font-size: 26px;
+}
+
+.caja__trasera button{
+    padding: 10px 40px;
+    border: 2px solid #fff;
+    font-size: 14px;
+    background: transparent;
+    font-weight: 600;
+    cursor: pointer;
+    color: #fff;
+    outline: none;
+    transition: all 300ms;
+}
+
+.caja__trasera button:hover{
+    background: #0ea5e9;
+    color: #fff;
+}
+
+/*Formularios*/
+
+.contenedor__login-register{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 380px;
+    position: relative;
+    top: -185px;
+    left: 10px;
+    transition: left 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.contenedor__login-register form{
+    width: 100%;
+    padding: 80px 20px;
+    background: #fff;
+    position: absolute;
+    border-radius: 20px;
+}
+
+.contenedor__login-register form h2{
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 45px;
+    color: #0ea5e9;
+}
+
+.contenedor__login-register form input{
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: none;
+    background: #f2f2f2;
+    font-size: 16px;
+    outline: none;
+}
+
+.contenedor__login-register form button{
+    padding: 10px 40px;
+    margin-top: 40px;
+    border: none;
+    font-size: 14px;
+    background: #0ea5e9;
+    font-weight: 600;
+    cursor: pointer;
+    color: #fff;
+    outline: none;
+    border-radius: 5px;
+}
+#doc_tipo{
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: none;
+    background: #f2f2f2;
+    font-size: 16px;
+    outline: none;
+}
+#sexo {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: none;
+    background: #f2f2f2;
+    font-size: 16px;
+    outline: none;
+}
+
+#rh {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: none;
+    background: #f2f2f2;
+    font-size: 16px;
+    outline: none;
+}
+
+.formulario__login{
+    opacity: 1;
+    display: block;
+}
+.formulario__register {
+    display: none;
+    position: absolute; /* tiene que estar absolute o relative */
+    overflow: hidden; /*para que no se vea el contenido que excede */
+}
+
+.formulario__register .form-scroll-inner {
+    max-height: 300px; /* Define la altura máxima visible del formulario */
+    overflow-y: auto; /* Esto añade la barra de scroll vertical cuando el contenido excede la altura máxima. */
+    padding-right: 20px; /* Espacio para la barra de scroll */
+}
+
+.formulario__register .form-scroll-inner::-webkit-scrollbar {
+    width: 8px; /* Ancho de la barra de scroll */
+}
+
+.formulario__register .form-scroll-inner::-webkit-scrollbar-thumb {
+    background-color: #0ea5e9; /* Color de la barra de scroll */
+    border-radius: 4px;
+}
+
+.formulario__register .form-scroll-inner::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+/*Respuesta a dispositivos moviles*/
+@media screen and (max-width: 850px){
+    main{
+        margin-top: 50px;
+    }
+    .caja__trasera{
+        max-width: 350px;
+        height: 300px;
+        flex-direction: column;
+        margin: auto;
+    }
+    .caja__trasera div{
+        position: absolute;
+    }
+    /*Formularios*/
+    .contenedor__login-register{
+        top: -10px;
+        left: -5px;
+        margin: auto;
+    }
+    .contenedor__login-register form{
+        position: relative;
+    }
+
+    .required {
+    color: #ef4444;
+    }
+}
