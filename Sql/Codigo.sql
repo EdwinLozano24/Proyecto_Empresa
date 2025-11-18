@@ -40,16 +40,20 @@ CREATE TABLE tbl_empleado (
     FOREIGN KEY (Id_Cargo) REFERENCES tbl_cargo(Id_Cargo)
 );
 
+
 -- Tabla: Usuarios
 CREATE TABLE tbl_usuario (
     Id_Usuario INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    Nombre_Usuario VARCHAR(255),
-    Password_Usuario VARCHAR(255),
-    Id_Empleado INT,
-    Id_Rol INT,
+    Nombre_Usuario VARCHAR(255) UNIQUE NOT NULL,
+    Password_Usuario VARCHAR(255) NOT NULL,
+    Id_Empleado INT NULL,
+    Id_Rol INT NOT NULL,
+    Token_Recuperacion VARCHAR(255) NULL,
+    Token_Expira DATETIME NULL,
     FOREIGN KEY (Id_Empleado) REFERENCES tbl_empleado(Id_Empleado),
     FOREIGN KEY (Id_Rol) REFERENCES tbl_rol(Id_Rol)
 );
+
 
 -- Tabla: Equipos
 CREATE TABLE tbl_equipos (
