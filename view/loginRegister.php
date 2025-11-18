@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"> <!-- Codificación UTF-8 para soportar tildes, ñ, etc. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Página responsive en móviles -->
-    <title>login!</title>
+    <title>login</title>
 
     <!-- Fuente de Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,14 +27,6 @@
     ?>
 </head>
 <body>
-    <?php 
-    // Si existe ?exito=1 en la URL, muestra mensaje de confirmación de registro
-    if (isset($_GET['exito']) && $_GET['exito'] == 1): ?>
-        <div class="alert alert-primary alert-dismissible fade show m-3" role="alert">
-            ¡Registro exitoso! Ahora puedes iniciar sesión.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-        </div>
-    <?php endif; ?>
 
     <main>
         
@@ -57,7 +49,7 @@
             <div class="contenedor__login-register">
 
                 <!-- FORMULARIO LOGIN -->
-                <form id="loginForm" action="/controllers/AuthController.php?accion=Login" method="POST" class="formulario__login">
+                <form id="loginForm"  class="formulario__login">
                     <h2>Iniciar Sesión</h2>
 
                     <!-- Campo oculto para identificar origen -->
@@ -84,7 +76,7 @@
                 </form>
 
                 <!-- FORMULARIO REGISTRO -->
-                <form id="registerForm" action="/controllers/UsuarioController.php?accion=store" method="POST" class="formulario__register">
+                <form id="registerForm" action="" method="POST" class="formulario__register">
                     <h2>Registrarse</h2>
 
                     <!-- Scroll interno por ser formulario largo -->
@@ -166,7 +158,6 @@
                     <button type="submit" name="registrarUsuario">Registrarse</button>
                 </form>
             </div>
-            <?php include($_SERVER['DOCUMENT_ROOT'] . '/views/.general/error/alerta.php'); ?>
 
         </div>
         
@@ -176,6 +167,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Script propio para alternar entre login/registro -->
-    <script src="/assets/js/script.js"></script>
+    <script src="/inventario_equipos/assets/js/script.js"></script>
+
 </body>
 </html>

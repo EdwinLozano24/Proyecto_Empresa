@@ -12,7 +12,7 @@
 
 
 body{
-    background-color: #000000;
+    background-color: #a1a1a1;
     background-image: url(/Assets/img/Login/chamaquita.jpeg);
     background-repeat: no-repeat;
     background-size: cover;
@@ -40,7 +40,7 @@ main{
     display: flex;
     justify-content: center;
     backdrop-filter: blur(10px);
-    background-color: rgba(14, 165, 233, 0.5);
+    background-color: rgba(206, 6, 6, 0.774);
     border-radius: 10px;
 }
 
@@ -73,7 +73,7 @@ main{
 }
 
 .caja__trasera button:hover{
-    background: #0ea5e9;
+    background: rgba(206, 6, 6, 0.774);
     color: #fff;
 }
 
@@ -101,7 +101,7 @@ main{
     font-size: 30px;
     text-align: center;
     margin-bottom: 45px;
-    color: #0ea5e9;
+    color: rgba(206, 6, 6, 0.774);
 }
 
 .contenedor__login-register form input{
@@ -120,7 +120,7 @@ main{
     margin-top: 40px;
     border: none;
     font-size: 14px;
-    background: #0ea5e9;
+    background: rgba(206, 6, 6, 0.774);
     font-weight: 600;
     cursor: pointer;
     color: #fff;
@@ -178,7 +178,7 @@ main{
 }
 
 .formulario__register .form-scroll-inner::-webkit-scrollbar-thumb {
-    background-color: #0ea5e9; /* Color de la barra de scroll */
+    background-color: rgba(206, 6, 6, 0.774); /* Color de la barra de scroll */
     border-radius: 4px;
 }
 
@@ -210,6 +210,6 @@ main{
     }
 
     .required {
-    color: #ef4444;
+    color: rgba(206, 6, 6, 0.774);
     }
 }
