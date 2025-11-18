@@ -12,8 +12,8 @@
 
 
 body{
-    background-color: #a1a1a1;
-    background-image: url(/Assets/img/Login/chamaquita.jpeg);
+    background-color: #000000;
+    background-image: url(/inventario_equipos/assets/img/fondo_login.png);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
