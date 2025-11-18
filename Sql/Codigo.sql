@@ -95,3 +95,41 @@ CREATE TABLE tbl_historial (
     FOREIGN KEY (Id_Equipo) REFERENCES tbl_equipos(Id_Equipo),
     FOREIGN KEY (Id_Empleado) REFERENCES tbl_empleado(Id_Empleado)
 );
+
+-- Triggers
+--hay que probar si funciona
+DELIMITER $$
+
+CREATE TRIGGER trg_usuario_set_empleado
+BEFORE INSERT ON tbl_usuarios
+FOR EACH ROW
+BEGIN
+    DECLARE v_id_empleado INT;
+
+    -- Buscar el empleado cuyo número de identificación coincide
+    SELECT id_empleado INTO v_id_empleado
+    FROM tbl_empleados
+    WHERE numero_identificacion = NEW.numero_identificacion
+    LIMIT 1;
+
+    -- Si existe, se asigna el id_empleado al usuario
+    SET NEW.id_empleado = v_id_empleado;
+END$$
+
+DELIMITER ;
+
+ 
+DELIMITER $$
+
+CREATE TRIGGER trg_empleado_link_usuario
+AFTER INSERT ON tbl_empleados
+FOR EACH ROW
+BEGIN
+    -- Actualizar usuario cuyo número de identificación coincida
+    UPDATE tbl_usuarios
+    SET id_empleado = NEW.id_empleado
+    WHERE numero_identificacion = NEW.numero_identificacion;
+END$$
+
+DELIMITER ;
+

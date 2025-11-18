@@ -56,15 +56,15 @@
                     <input type="hidden" name="origen_formulario" value="Usuario">
 
                     <!-- Documento -->
-                    <label for="login_documento">Número de Documento</label>
-                    <input type="text" id="login_documento" name="usua_documento" placeholder="Número de Documento" required>
+                    <label for="login_documento">Nombre de Usuario</label>
+                    <input type="text" id="Nombre_Usuario" name="Nombre_Usuario" placeholder="Nombre de Usuario" required>
 
                     <!-- Contraseña -->
                     <label for="login_password">Contraseña</label>
-                    <input type="password" id="login_password" name="usua_password" placeholder="Contraseña" required>
+                    <input type="password" id="login_password" name="Password_Usuario" placeholder="Contraseña" required>
 
                     <!-- Mensajes de error -->
-                    <div id="error" style="color: blue;"></div>
+                    <div id="error" style="color: red;"></div>
 
                     <!-- Botón login -->
                     <button type="submit" name="loginUsuario">Entrar</button>
@@ -82,76 +82,12 @@
                     <!-- Scroll interno por ser formulario largo -->
                     <div class="form-scroll-inner">
 
-                        <!-- Tipo de Documento -->
-                        <label for="doc_tipo">Tipo de Documento</label><label for="" class="required">*</label>
-                        <select name="usua_tipo_documento" id="doc_tipo" required>
-                            <option value="" disabled selected>Tipo de Documento</option>
-                            <option value="Cédula de ciudadanía">Cédula</option>
-                            <option value="Tarjeta de identidad">Tarjeta de Identidad</option>
-                            <option value="Cédula de extranjería">Cédula de Extranjería</option>
-                            <option value="Permiso especial de permanencia">Permiso Especial de Permanencia</option>
-                            <option value="Pasaporte">Pasaporte</option>
-                            <option value="Número de identificación tributaria">Número de Identificación Tributaria</option>
-                            <option value="Otro">Otro</option>
-                        </select>
-
-                        <!-- Documento -->
-                        <label for="num_documento">Número de Documento *</label>
-                        <input type="number" placeholder="Número de Documento" name="usua_documento" id="num_documento" required>
-
-                        <!-- Nombre -->
-                        <label for="nombre">Nombre Completo *</label>
-                        <input type="text" placeholder="Nombre Completo" name="usua_nombre" id="nombre" required>
-                        
-                        <!-- Correo -->
-                        <label for="correo">Correo Electrónico *</label>
-                        <input type="email" placeholder="Correo Electrónico" name="usua_correo_electronico" id="correo" required>
-
-                        <!-- Teléfono principal -->
-                        <label for="contacto">Número de contacto *</label>
-                        <input type="tel" placeholder="Número de Contacto" name="usua_num_contacto" id="contacto" required>
-
-                        <!-- Teléfono secundario -->
-                        <label for="acudiente">Número de contacto secundario</label>
-                        <input type="tel" placeholder="Número Secundario / Acudiente" name="usua_num_secundario" id="acudiente">
-
-                        <!-- Dirección -->
-                        <label for="direccion">Dirección *</label>
-                        <input type="text" placeholder="Dirección" name="usua_direccion" id="direccion" required>
-
-                        <!-- Fecha nacimiento -->
-                        <label for="nacimiento">Fecha de Nacimiento *</label>
-                        <input type="date" name="usua_fecha_nacimiento" id="nacimiento" required>
-
-                        <!-- Sexo -->
-                        <label for="sexo">Sexo *</label>
-                        <select name="usua_sexo" id="sexo" required>
-                            <option value="" disabled selected>Sexo</option>
-                            <option value="Masculino">Masculino</option>
-                            <option value="Femenino">Femenino</option>
-                        </select>
-    
-                        <!-- Tipo de sangre -->
-                        <label for="rh">Tipo de sangre *</label>
-                        <select name="usua_rh" id="rh" required>
-                            <option value="" disabled selected>Tipo de Sangre (RH)</option>
-                            <option value="A+">A+</option>
-                            <option value="A-">A-</option>
-                            <option value="B+">B+</option>
-                            <option value="B-">B-</option>
-                            <option value="AB+">AB+</option>
-                            <option value="AB-">AB-</option>
-                            <option value="O+">O+</option>
-                            <option value="O-">O-</option>
-                        </select>
-                        
-                        <!-- EPS -->
-                        <label for="eps">EPS *</label>
-                        <input type="text" placeholder="EPS" name="usua_eps" id="eps" required>
-
+                        <!-- Nombre de Usuario -->
+                        <label for="num_documento">Nombre de Usuario *</label>
+                        <input type="text" placeholder="Nombre de Usuario" name="Nombre_Usuario" id="num_documento" required>
                         <!-- Contraseña -->
                         <label for="contrasena">Contraseña *</label>
-                        <input type="password" placeholder="Contraseña" name="usua_password" id="contrasena" required>
+                        <input type="password" placeholder="Contraseña" name="Password_Usuario" id="contrasena" required>
                     </div>
 
                     <!-- Botón registro -->
