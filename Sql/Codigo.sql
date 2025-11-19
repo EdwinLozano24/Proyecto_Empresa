@@ -32,6 +32,7 @@ CREATE TABLE tbl_cargo (
 -- Tabla: Empleados
 CREATE TABLE tbl_empleado (
     Id_Empleado INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    documento_Empleado VARCHAR(50) UNIQUE NOT NULL,
     Nombre_Empleado VARCHAR(255),
     Apellido_Empleado VARCHAR(255),
     Num_Telefono VARCHAR(20),
@@ -44,6 +45,7 @@ CREATE TABLE tbl_empleado (
 -- Tabla: Usuarios
 CREATE TABLE tbl_usuario (
     Id_Usuario INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    documento_Usuario VARCHAR(50) UNIQUE NOT NULL,
     Nombre_Usuario VARCHAR(255) UNIQUE NOT NULL,
     Password_Usuario VARCHAR(255) NOT NULL,
     Id_Empleado INT NULL,
@@ -101,34 +103,35 @@ CREATE TABLE tbl_historial (
 DELIMITER $$
 
 CREATE TRIGGER trg_usuario_set_empleado
-BEFORE INSERT ON tbl_usuarios
+BEFORE INSERT ON tbl_usuario
 FOR EACH ROW
 BEGIN
     DECLARE v_id_empleado INT;
 
-    -- Buscar el empleado cuyo número de identificación coincide
-    SELECT id_empleado INTO v_id_empleado
-    FROM tbl_empleados
-    WHERE numero_identificacion = NEW.numero_identificacion
+    -- Buscar empleado con el mismo documento
+    SELECT Id_Empleado INTO v_id_empleado
+    FROM tbl_empleado
+    WHERE documento_Empleado = NEW.documento_Usuario
     LIMIT 1;
 
-    -- Si existe, se asigna el id_empleado al usuario
-    SET NEW.id_empleado = v_id_empleado;
+    -- Si existe, asignar el Id_Empleado al usuario
+    SET NEW.Id_Empleado = v_id_empleado;
 END$$
 
 DELIMITER ;
+
 
  
 DELIMITER $$
 
 CREATE TRIGGER trg_empleado_link_usuario
-AFTER INSERT ON tbl_empleados
+AFTER INSERT ON tbl_empleado
 FOR EACH ROW
 BEGIN
-    -- Actualizar usuario cuyo número de identificación coincida
-    UPDATE tbl_usuarios
-    SET id_empleado = NEW.id_empleado
-    WHERE numero_identificacion = NEW.numero_identificacion;
+    -- Enlazar el usuario con el empleado si coincide el documento
+    UPDATE tbl_usuario
+    SET Id_Empleado = NEW.Id_Empleado
+    WHERE documento_Usuario = NEW.documento_Empleado;
 END$$
 
 DELIMITER ;
