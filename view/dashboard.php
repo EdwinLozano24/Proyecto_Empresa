@@ -30,6 +30,7 @@
           <h1>Gradezco</h1>
           <p>Sistema de Inventario de Equipos</p>
         </div>
+        <!-- hola -->
         <div class="search-container">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
