@@ -138,182 +138,276 @@ END$$
 DELIMITER ;
 
 
-    --Funcion para capitalizar y poner texto en el mismo formato ej: hOLa -> Hola
-DELIMITER $$
+-- BORRAR funciones/triggers previos (opcional, para evitar duplicados)
+DROP FUNCTION IF EXISTS CapitalizarPalabras;
+DROP FUNCTION IF EXISTS Capitalizar;
+DROP TRIGGER IF EXISTS trg_empleado_bi;
+DROP TRIGGER IF EXISTS trg_empleado_bu;
+DROP TRIGGER IF EXISTS trg_tipo_equipo_bi;
+DROP TRIGGER IF EXISTS trg_tipo_equipo_bu;
+-- (Añade más DROP TRIGGER si ya creaste otros)
 
-CREATE FUNCTION Capitalizar(texto VARCHAR(255))
+-- 1) Función: Capitalizar cada palabra -> "aLGO ASI" => "Algo Asi"
+DELIMITER $$
+CREATE FUNCTION CapitalizarPalabras(txt VARCHAR(255))
 RETURNS VARCHAR(255)
 DETERMINISTIC
 BEGIN
-    IF texto IS NULL THEN
+    DECLARE resultado VARCHAR(255) DEFAULT '';
+    DECLARE palabra VARCHAR(255);
+    DECLARE espacio_pos INT DEFAULT 1;
+    DECLARE len INT;
+    DECLARE i INT DEFAULT 1;
+
+    IF txt IS NULL THEN
         RETURN NULL;
     END IF;
-    RETURN CONCAT(UCASE(LEFT(texto,1)), LCASE(SUBSTRING(texto,2)));
-END$$
 
+    SET txt = TRIM(txt);
+    SET len = CHAR_LENGTH(txt);
+
+    WHILE i <= len DO
+        -- extraer palabra por palabra usando LOCATE de espacios
+        SET espacio_pos = LOCATE(' ', txt, 1);
+        IF espacio_pos = 0 THEN
+            SET palabra = txt;
+            SET txt = '';
+            SET i = len + 1;
+        ELSE
+            SET palabra = LEFT(txt, espacio_pos - 1);
+            SET txt = LTRIM(SUBSTRING(txt, espacio_pos));
+            SET len = CHAR_LENGTH(txt);
+        END IF;
+
+        IF palabra <> '' THEN
+            SET palabra = CONCAT( UPPER(LEFT(LOWER(palabra),1)), SUBSTRING(LOWER(palabra),2) );
+            IF resultado = '' THEN
+                SET resultado = palabra;
+            ELSE
+                SET resultado = CONCAT(resultado, ' ', palabra);
+            END IF;
+        END IF;
+    END WHILE;
+
+    RETURN resultado;
+END$$
 DELIMITER ;
 
-
--- capitalizar tbl_tipo_equipo
+-- 2) Función: Capitalizar sólo la primera letra (por si la prefieres)
 DELIMITER $$
-
-CREATE TRIGGER trg_tipo_equipo_bi
-BEFORE INSERT ON tbl_tipo_equipo
-FOR EACH ROW
+CREATE FUNCTION Capitalizar(txt VARCHAR(255))
+RETURNS VARCHAR(255)
+DETERMINISTIC
 BEGIN
-    SET NEW.Nombre_Tipo_Equipo = Capitalizar(NEW.Nombre_Tipo_Equipo);
+    IF txt IS NULL OR txt = '' THEN
+        RETURN txt;
+    END IF;
+    RETURN CONCAT( UPPER(LEFT(LOWER(txt),1)), SUBSTRING(LOWER(txt),2) );
 END$$
-
-CREATE TRIGGER trg_tipo_equipo_bu
-BEFORE UPDATE ON tbl_tipo_equipo
-FOR EACH ROW
-BEGIN
-    SET NEW.Nombre_Tipo_Equipo = Capitalizar(NEW.Nombre_Tipo_Equipo);
-END$$
-
 DELIMITER ;
 
-
---capitalizar tbl_archivo
+-- 3) Ejemplo triggers para tbl_empleado (usar CapitalizarPalabras en nombres, correo en lowercase)
 DELIMITER $$
-
-CREATE TRIGGER trg_archivo_bi
-BEFORE INSERT ON tbl_archivo
-FOR EACH ROW
-BEGIN
-    SET NEW.Nombre_Archivo = Capitalizar(NEW.Nombre_Archivo);
-END$$
-
-CREATE TRIGGER trg_archivo_bu
-BEFORE UPDATE ON tbl_archivo
-FOR EACH ROW
-BEGIN
-    SET NEW.Nombre_Archivo = Capitalizar(NEW.Nombre_Archivo);
-END$$
-
-DELIMITER ;
-
---capitaizar tbl_rol
-DELIMITER $$
-
-CREATE TRIGGER trg_rol_bi
-BEFORE INSERT ON tbl_rol
-FOR EACH ROW
-BEGIN
-    SET NEW.Nombre_Rol = Capitalizar(NEW.Nombre_Rol);
-END$$
-
-CREATE TRIGGER trg_rol_bu
-BEFORE UPDATE ON tbl_rol
-FOR EACH ROW
-BEGIN
-    SET NEW.Nombre_Rol = Capitalizar(NEW.Nombre_Rol);
-END$$
-
-DELIMITER ;
-
---capitaizar tbl_cargo
-DELIMITER $$
-
-CREATE TRIGGER trg_cargo_bi
-BEFORE INSERT ON tbl_cargo
-FOR EACH ROW
-BEGIN
-    SET NEW.Nombre_Cargo = Capitalizar(NEW.Nombre_Cargo);
-END$$
-
-CREATE TRIGGER trg_cargo_bu
-BEFORE UPDATE ON tbl_cargo
-FOR EACH ROW
-BEGIN
-    SET NEW.Nombre_Cargo = Capitalizar(NEW.Nombre_Cargo);
-END$$
-
-DELIMITER ;
-
---capitalizar tbl_empleado  
-DELIMITER $$
-
 CREATE TRIGGER trg_empleado_bi
 BEFORE INSERT ON tbl_empleado
 FOR EACH ROW
 BEGIN
-    SET NEW.Nombre_Empleado   = Capitalizar(NEW.Nombre_Empleado);
-    SET NEW.Apellido_Empleado = Capitalizar(NEW.Apellido_Empleado);
+    SET NEW.Nombre_Empleado   = CapitalizarPalabras(NEW.Nombre_Empleado);
+    SET NEW.Apellido_Empleado = CapitalizarPalabras(NEW.Apellido_Empleado);
+    SET NEW.Correo_Electronico = LOWER(NEW.Correo_Electronico);
 END$$
 
 CREATE TRIGGER trg_empleado_bu
 BEFORE UPDATE ON tbl_empleado
 FOR EACH ROW
 BEGIN
-    SET NEW.Nombre_Empleado   = Capitalizar(NEW.Nombre_Empleado);
-    SET NEW.Apellido_Empleado = Capitalizar(NEW.Apellido_Empleado);
+    SET NEW.Nombre_Empleado   = CapitalizarPalabras(NEW.Nombre_Empleado);
+    SET NEW.Apellido_Empleado = CapitalizarPalabras(NEW.Apellido_Empleado);
+    SET NEW.Correo_Electronico = LOWER(NEW.Correo_Electronico);
 END$$
-
 DELIMITER ;
 
---capitalizar tbl_equipos
+-- 4) Triggers para tbl_tipo_equipo (ejemplo)
 DELIMITER $$
+CREATE TRIGGER trg_tipo_equipo_bi
+BEFORE INSERT ON tbl_tipo_equipo
+FOR EACH ROW
+BEGIN
+    SET NEW.Nombre_Tipo_Equipo = CapitalizarPalabras(NEW.Nombre_Tipo_Equipo);
+    SET NEW.Descripcion_Tipo_Equipo = CapitalizarPalabras(NEW.Descripcion_Tipo_Equipo);
+END$$
 
+CREATE TRIGGER trg_tipo_equipo_bu
+BEFORE UPDATE ON tbl_tipo_equipo
+FOR EACH ROW
+BEGIN
+    SET NEW.Nombre_Tipo_Equipo = CapitalizarPalabras(NEW.Nombre_Tipo_Equipo);
+    SET NEW.Descripcion_Tipo_Equipo = CapitalizarPalabras(NEW.Descripcion_Tipo_Equipo);
+END$$
+DELIMITER ;
+
+-- 5) Triggers para tbl_archivo
+DELIMITER $$
+CREATE TRIGGER trg_archivo_bi
+BEFORE INSERT ON tbl_archivo
+FOR EACH ROW
+BEGIN
+    SET NEW.Nombre_Archivo = CapitalizarPalabras(NEW.Nombre_Archivo);
+    SET NEW.Ruta_Archivo = LOWER(NEW.Ruta_Archivo);
+END$$
+
+CREATE TRIGGER trg_archivo_bu
+BEFORE UPDATE ON tbl_archivo
+FOR EACH ROW
+BEGIN
+    SET NEW.Nombre_Archivo = CapitalizarPalabras(NEW.Nombre_Archivo);
+    SET NEW.Ruta_Archivo = LOWER(NEW.Ruta_Archivo);
+END$$
+DELIMITER ;
+
+-- 6) Triggers para tbl_cargo
+DELIMITER $$
+CREATE TRIGGER trg_cargo_bi
+BEFORE INSERT ON tbl_cargo
+FOR EACH ROW
+BEGIN
+    SET NEW.Nombre_Cargo = CapitalizarPalabras(NEW.Nombre_Cargo);
+    SET NEW.Descripcion_Cargo = CapitalizarPalabras(NEW.Descripcion_Cargo);
+END$$
+
+CREATE TRIGGER trg_cargo_bu
+BEFORE UPDATE ON tbl_cargo
+FOR EACH ROW
+BEGIN
+    SET NEW.Nombre_Cargo = CapitalizarPalabras(NEW.Nombre_Cargo);
+    SET NEW.Descripcion_Cargo = CapitalizarPalabras(NEW.Descripcion_Cargo);
+END$$
+DELIMITER ;
+
+-- 7) Triggers para tbl_rol
+DELIMITER $$
+CREATE TRIGGER trg_rol_bi
+BEFORE INSERT ON tbl_rol
+FOR EACH ROW
+BEGIN
+    SET NEW.Nombre_Rol = CapitalizarPalabras(NEW.Nombre_Rol);
+    SET NEW.Descripcion_Rol = CapitalizarPalabras(NEW.Descripcion_Rol);
+END$$
+
+CREATE TRIGGER trg_rol_bu
+BEFORE UPDATE ON tbl_rol
+FOR EACH ROW
+BEGIN
+    SET NEW.Nombre_Rol = CapitalizarPalabras(NEW.Nombre_Rol);
+    SET NEW.Descripcion_Rol = CapitalizarPalabras(NEW.Descripcion_Rol);
+END$$
+DELIMITER ;
+
+-- 8) Triggers para tbl_equipos
+DELIMITER $$
 CREATE TRIGGER trg_equipos_bi
 BEFORE INSERT ON tbl_equipos
 FOR EACH ROW
 BEGIN
-    SET NEW.Marca_Equipo     = Capitalizar(NEW.Marca_Equipo);
-    SET NEW.Ubicacion_Equipo = Capitalizar(NEW.Ubicacion_Equipo);
+    SET NEW.Marca_Equipo     = CapitalizarPalabras(NEW.Marca_Equipo);
+    SET NEW.Ubicacion_Equipo = CapitalizarPalabras(NEW.Ubicacion_Equipo);
+    SET NEW.Propietario_Equipo = CapitalizarPalabras(NEW.Propietario_Equipo);
+    SET NEW.Codigo_Inventario = UPPER(NEW.Codigo_Inventario);
+    SET NEW.Numero_Serie = UPPER(NEW.Numero_Serie);
 END$$
 
 CREATE TRIGGER trg_equipos_bu
 BEFORE UPDATE ON tbl_equipos
 FOR EACH ROW
 BEGIN
-    SET NEW.Marca_Equipo     = Capitalizar(NEW.Marca_Equipo);
-    SET NEW.Ubicacion_Equipo = Capitalizar(NEW.Ubicacion_Equipo);
+    SET NEW.Marca_Equipo     = CapitalizarPalabras(NEW.Marca_Equipo);
+    SET NEW.Ubicacion_Equipo = CapitalizarPalabras(NEW.Ubicacion_Equipo);
+    SET NEW.Propietario_Equipo = CapitalizarPalabras(NEW.Propietario_Equipo);
+    SET NEW.Codigo_Inventario = UPPER(NEW.Codigo_Inventario);
+    SET NEW.Numero_Serie = UPPER(NEW.Numero_Serie);
 END$$
-
 DELIMITER ;
 
---capitasizar tbl_mantenimiento
+-- 9) Triggers para tbl_mantenimiento
 DELIMITER $$
-
 CREATE TRIGGER trg_mantenimiento_bi
 BEFORE INSERT ON tbl_mantenimiento
 FOR EACH ROW
 BEGIN
-    SET NEW.Descripcion_Mantenimiento = Capitalizar(NEW.Descripcion_Mantenimiento);
+    SET NEW.Descripcion_Mantenimiento = CapitalizarPalabras(NEW.Descripcion_Mantenimiento);
 END$$
 
 CREATE TRIGGER trg_mantenimiento_bu
 BEFORE UPDATE ON tbl_mantenimiento
 FOR EACH ROW
 BEGIN
-    SET NEW.Descripcion_Mantenimiento = Capitalizar(NEW.Descripcion_Mantenimiento);
+    SET NEW.Descripcion_Mantenimiento = CapitalizarPalabras(NEW.Descripcion_Mantenimiento);
 END$$
-
 DELIMITER ;
 
---capitalizar tbl_historial
+-- 10) Triggers para tbl_historial
 DELIMITER $$
-
 CREATE TRIGGER trg_historial_bi
 BEFORE INSERT ON tbl_historial
 FOR EACH ROW
 BEGIN
-    SET NEW.Ubicacion_Antigua   = Capitalizar(NEW.Ubicacion_Antigua);
-    SET NEW.Descripcion_Historial = Capitalizar(NEW.Descripcion_Historial);
-    SET NEW.Ubicacion_Nueva     = Capitalizar(NEW.Ubicacion_Nueva);
+    SET NEW.Ubicacion_Antigua   = CapitalizarPalabras(NEW.Ubicacion_Antigua);
+    SET NEW.Descripcion_Historial = CapitalizarPalabras(NEW.Descripcion_Historial);
+    SET NEW.Ubicacion_Nueva     = CapitalizarPalabras(NEW.Ubicacion_Nueva);
 END$$
 
 CREATE TRIGGER trg_historial_bu
 BEFORE UPDATE ON tbl_historial
 FOR EACH ROW
 BEGIN
-    SET NEW.Ubicacion_Antigua   = Capitalizar(NEW.Ubicacion_Antigua);
-    SET NEW.Descripcion_Historial = Capitalizar(NEW.Descripcion_Historial);
-    SET NEW.Ubicacion_Nueva     = Capitalizar(NEW.Ubicacion_Nueva);
+    SET NEW.Ubicacion_Antigua   = CapitalizarPalabras(NEW.Ubicacion_Antigua);
+    SET NEW.Descripcion_Historial = CapitalizarPalabras(NEW.Descripcion_Historial);
+    SET NEW.Ubicacion_Nueva     = CapitalizarPalabras(NEW.Ubicacion_Nueva);
 END$$
-
 DELIMITER ;
 
+-- 11) NORMALIZAR datos existentes (ejecutar después de crear funciones y triggers)
+-- Normalizar empleados
+UPDATE tbl_empleado
+SET Nombre_Empleado = CapitalizarPalabras(Nombre_Empleado),
+    Apellido_Empleado = CapitalizarPalabras(Apellido_Empleado),
+    Correo_Electronico = LOWER(Correo_Electronico);
 
+-- Normalizar tipos de equipo
+UPDATE tbl_tipo_equipo
+SET Nombre_Tipo_Equipo = CapitalizarPalabras(Nombre_Tipo_Equipo),
+    Descripcion_Tipo_Equipo = CapitalizarPalabras(Descripcion_Tipo_Equipo);
 
+-- Normalizar archivos
+UPDATE tbl_archivo
+SET Nombre_Archivo = CapitalizarPalabras(Nombre_Archivo),
+    Ruta_Archivo = LOWER(Ruta_Archivo);
+
+-- Normalizar cargos
+UPDATE tbl_cargo
+SET Nombre_Cargo = CapitalizarPalabras(Nombre_Cargo),
+    Descripcion_Cargo = CapitalizarPalabras(Descripcion_Cargo);
+
+-- Normalizar roles
+UPDATE tbl_rol
+SET Nombre_Rol = CapitalizarPalabras(Nombre_Rol),
+    Descripcion_Rol = CapitalizarPalabras(Descripcion_Rol);
+
+-- Normalizar equipos
+UPDATE tbl_equipos
+SET Marca_Equipo = CapitalizarPalabras(Marca_Equipo),
+    Ubicacion_Equipo = CapitalizarPalabras(Ubicacion_Equipo),
+    Propietario_Equipo = CapitalizarPalabras(Propietario_Equipo),
+    Codigo_Inventario = UPPER(Codigo_Inventario),
+    Numero_Serie = UPPER(Numero_Serie);
+
+-- Normalizar mantenimiento e historial
+UPDATE tbl_mantenimiento
+SET Descripcion_Mantenimiento = CapitalizarPalabras(Descripcion_Mantenimiento);
+
+UPDATE tbl_historial
+SET Ubicacion_Antigua = CapitalizarPalabras(Ubicacion_Antigua),
+    Descripcion_Historial = CapitalizarPalabras(Descripcion_Historial),
+    Ubicacion_Nueva = CapitalizarPalabras(Ubicacion_Nueva);
+
+-- NOTA: No se ejecutan updates sobre tbl_usuario (contraseñas/tokens).
