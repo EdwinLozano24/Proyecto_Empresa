@@ -5,7 +5,7 @@ USE inventario_equipos_gradezco;
 -- Tabla: Tipos de equipos
 CREATE TABLE tbl_tipo_equipo (
     Id_Tipo_Equipo INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    Nombre_Tipo_Equipo VARCHAR(255),
+    Nombre_Tipo_Equipo VARCHAR UNIQUE(255),
     Descripcion_Tipo_Equipo TEXT
 );
 
@@ -19,14 +19,14 @@ CREATE TABLE tbl_archivo (
 -- Tabla: Roles
 CREATE TABLE tbl_rol (
     Id_Rol INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    Nombre_Rol VARCHAR(255),
+    Nombre_Rol VARCHAR UNIQUE(255),
     Descripcion_Rol TEXT
 );
 
 -- Tabla: Cargos
 CREATE TABLE tbl_cargo (
     Id_Cargo INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    Nombre_Cargo VARCHAR(255),
+    Nombre_Cargo VARCHAR UNIQUE(255),
     Descripcion_Cargo TEXT
 );
 
