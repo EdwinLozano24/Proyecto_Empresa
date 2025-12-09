@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8"> <!-- Codificación UTF-8 para soportar tildes, ñ, etc. -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Página responsive en móviles -->
-    <title>login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Inventario de Equipos</title>
 
     <!-- Fuente de Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,23 +13,19 @@
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
-
-    <!-- CSS personalizado (se fuerza actualización con versión al final) -->
-  <?php
-    // Usar el CSS estilizado para PQRS
+    <!-- CSS personalizado -->
+    <?php
     $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/LoginRegister.css';
     $cssUrl = '/inventario_equipos/assets/css/LoginRegister.css';
     if (file_exists($cssPath)) {
         echo '<link rel="stylesheet" href="' . $cssUrl . '">';
     } else {
-        echo ' CSS File not found at: ' . $cssPath . '';
+        echo '<!-- CSS File not found at: ' . $cssPath . ' -->';
     }
     ?>
 </head>
 <body>
-
     <main>
-        
         <div class="contenedor__todo">
             
             <!-- Caja trasera con botones para alternar entre login y registro -->
@@ -45,49 +41,82 @@
                     <button id="btn__registrarse" type="button">Registrarse</button>
                 </div>
             </div>
+
             <!-- Contenedor de los formularios -->
             <div class="contenedor__login-register">
 
                 <!-- FORMULARIO LOGIN -->
-                <form id="loginForm"  class="formulario__login">
+                <form id="loginForm" action="/inventario_equipos/controller/usuarioController.php" method="POST" class="formulario__login">
                     <h2>Iniciar Sesión</h2>
 
                     <!-- Campo oculto para identificar origen -->
                     <input type="hidden" name="origen_formulario" value="Usuario">
 
-                    <!-- Documento -->
-                    <label for="login_documento">Nombre de Usuario</label>
-                    <input type="text" id="Nombre_Usuario" name="Nombre_Usuario" placeholder="Nombre de Usuario" required>
+                    <!-- Mostrar errores de login si existen -->
+                    <?php if (isset($_SESSION['error_login'])): ?>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Error:</strong> <?php echo htmlspecialchars($_SESSION['error_login']); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <?php unset($_SESSION['error_login']); ?>
+                    <?php endif; ?>
+
+                    <!-- Nombre de Usuario -->
+                    <label for="login_nombre_usuario">Nombre de Usuario</label>
+                    <input type="text" id="login_nombre_usuario" name="Nombre_Usuario" placeholder="Nombre de Usuario" required>
 
                     <!-- Contraseña -->
                     <label for="login_password">Contraseña</label>
                     <input type="password" id="login_password" name="Password_Usuario" placeholder="Contraseña" required>
 
-                    <!-- Mensajes de error -->
-                    <div id="error" style="color: red;"></div>
-
                     <!-- Botón login -->
                     <button type="submit" name="loginUsuario">Entrar</button>
 
                     <!-- Enlace recuperar contraseña -->
-                    <a href="../../../views/.general/password/recuperar_form.php" style="text-decoration: none; padding-left: 10px;">
+                    <a href="#" style="text-decoration: none; padding-left: 10px; display: block; margin-top: 10px;">
                         ¿Olvidaste la contraseña?
                     </a>
                 </form>
 
                 <!-- FORMULARIO REGISTRO -->
-                <form id="registerForm" action="" method="POST" class="formulario__register">
+                <form id="registerForm" action="/inventario_equipos/controller/usuarioController.php" method="POST" class="formulario__register">
                     <h2>Registrarse</h2>
 
-                    <!-- Scroll interno por ser formulario largo -->
+                    <!-- Campo oculto para identificar origen -->
+                    <input type="hidden" name="origen_formulario" value="Usuario">
+
+                    <!-- Mostrar errores de registro si existen -->
+                    <?php if (isset($_SESSION['error_registro'])): ?>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Error:</strong> <?php echo htmlspecialchars($_SESSION['error_registro']); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <?php unset($_SESSION['error_registro']); ?>
+                    <?php endif; ?>
+
+                    <!-- Mostrar éxito de registro si existe -->
+                    <?php if (isset($_SESSION['exito_registro'])): ?>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>Éxito:</strong> <?php echo htmlspecialchars($_SESSION['exito_registro']); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        <?php unset($_SESSION['exito_registro']); ?>
+                    <?php endif; ?>
+
                     <div class="form-scroll-inner">
+                        <!-- Documento -->
+                        <label for="documento_usuario">Documento *</label>
+                        <input type="text" id="documento_usuario" name="documento_Usuario" placeholder="Número de documento" required>
 
                         <!-- Nombre de Usuario -->
-                        <label for="num_documento">Nombre de Usuario *</label>
-                        <input type="text" placeholder="Nombre de Usuario" name="Nombre_Usuario" id="num_documento" required>
+                        <label for="nombre_usuario_reg">Nombre de Usuario *</label>
+                        <input type="text" id="nombre_usuario_reg" name="Nombre_Usuario" placeholder="Nombre de usuario único" required>
+
                         <!-- Contraseña -->
-                        <label for="contrasena">Contraseña *</label>
-                        <input type="password" placeholder="Contraseña" name="Password_Usuario" id="contrasena" required>
+                        <label for="password_reg">Contraseña *</label>
+                        <input type="password" id="password_reg" name="Password_Usuario" placeholder="Mínimo 6 caracteres" required>
+
+                        <small style="color: #999; display: block; margin-top: 5px;">* Campos requeridos</small>
                     </div>
 
                     <!-- Botón registro -->
@@ -96,7 +125,6 @@
             </div>
 
         </div>
-        
     </main>
 
     <!-- Bootstrap JS -->

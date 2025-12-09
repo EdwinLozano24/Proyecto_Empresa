@@ -5,13 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Inventario - Gradezco</title>
   <?php
-    // Usar el CSS estilizado para PQRS
+    // Proteger la página - requiere autenticación
+    require_once __DIR__ . '/../app/protecciones.php';
+    protegerPagina();
+    
+    // Obtener datos del usuario actual
+    $usuario = UsuarioController::obtenerUsuarioActual();
+    
+    // Usar el CSS estilizado
     $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/Dashboard.css';
     $cssUrl = '/inventario_equipos/assets/css/Dashboard.css';
     if (file_exists($cssPath)) {
         echo '<link rel="stylesheet" href="' . $cssUrl . '">';
     } else {
-        echo ' CSS File not found at: ' . $cssPath . '';
+        echo '<!-- CSS File not found at: ' . $cssPath . ' -->';
     }
     ?>
 </head>
@@ -30,7 +37,7 @@
           <h1>Gradezco</h1>
           <p>Sistema de Inventario de Equipos</p>
         </div>
-        <!-- hola -->
+        
         <div class="search-container">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
@@ -39,6 +46,18 @@
           <input type="text" placeholder="Buscar equipo, código...">
         </div>
       </div>
+      
+      <!-- Usuario autenticado -->
+      <div class="user-info" style="display: flex; align-items: center; gap: 15px;">
+        <div style="text-align: right; color: white;">
+          <p style="margin: 0; font-weight: 600;"><?php echo htmlspecialchars($usuario['nombre']); ?></p>
+          <p style="margin: 0; font-size: 12px; opacity: 0.9;"><?php echo htmlspecialchars($usuario['rol'] ?? 'Usuario'); ?></p>
+        </div>
+        <a href="/inventario_equipos/controller/cerrarSesion.php" style="color: white; text-decoration: none; padding: 8px 15px; background: rgba(255,255,255,0.2); border-radius: 4px; font-size: 14px;">
+          Cerrar Sesión
+        </a>
+      </div>
+
       <nav class="nav-tabs">
         <button class="nav-tab active">Dashboard</button>
         <button class="nav-tab">Equipos</button>
@@ -46,9 +65,7 @@
         <button class="nav-tab">Reportes</button>
       </nav>
     </div>
-  </header>
-
-  <main>
+  </header>  <main>
     <!-- Stats Grid -->
     <div class="stats-grid">
       <div class="stat-card">
