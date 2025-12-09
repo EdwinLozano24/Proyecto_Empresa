@@ -65,11 +65,12 @@ CREATE TABLE tbl_equipos (
     Marca_Equipo VARCHAR(255),
     Numero_Serie VARCHAR(255),
     Ubicacion_Equipo VARCHAR(255),
-    Propietario_Equipo TEXT,
+    Propietario_Equipo INT,
     Estado_Equipo ENUM('Activo','Inactivo','Mantenimiento','Dado de Baja'),
     Fecha_Ad_Equipo DATE,
     Id_Archivo INT,
     Id_Tipo_Equipo INT,
+    FOREIGN KEY (Propietario_Equipo )
     FOREIGN KEY (Id_Archivo) REFERENCES tbl_archivo(Id_Archivo),
     FOREIGN KEY (Id_Tipo_Equipo) REFERENCES tbl_tipo_equipo(Id_Tipo_Equipo)
 );
