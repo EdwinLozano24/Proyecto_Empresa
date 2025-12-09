@@ -412,3 +412,45 @@ SET Ubicacion_Antigua = CapitalizarPalabras(Ubicacion_Antigua),
     Ubicacion_Nueva = CapitalizarPalabras(Ubicacion_Nueva);
 
 -- NOTA: No se ejecutan updates sobre tbl_usuario (contraseñas/tokens).
+
+-- ==========================================
+-- DATOS DE INICIALIZACIÓN
+-- ==========================================
+
+-- Insertar roles por defecto
+INSERT INTO tbl_rol (Nombre_Rol, Descripcion_Rol) VALUES 
+('Administrador', 'Acceso total al sistema'),
+('Usuario', 'Acceso básico al sistema'),
+('Supervisor', 'Supervisión de inventario'),
+('Técnico', 'Técnico de mantenimiento');
+
+-- Insertar cargos por defecto
+INSERT INTO tbl_cargo (Nombre_Cargo, Descripcion_Cargo) VALUES 
+('Gerente', 'Gerente del departamento'),
+('Asistente', 'Asistente administrativo'),
+('Técnico', 'Técnico de soporte'),
+('Operario', 'Personal operativo');
+
+-- Insertar tipos de equipos por defecto
+INSERT INTO tbl_tipo_equipo (Nombre_Tipo_Equipo, Descripcion_Tipo_Equipo) VALUES 
+('Computadora', 'Equipos de cómputo de escritorio y portátiles'),
+('Monitor', 'Monitores para visualización'),
+('Impresora', 'Impresoras y multifuncionales'),
+('Router', 'Equipos de red'),
+('Escáner', 'Equipos de escaneo de documentos'),
+('Teléfono', 'Teléfonos y equipos de comunicación'),
+('Servidor', 'Servidores de red');
+
+-- ==========================================
+-- VERIFICACIÓN DE DATOS
+-- ==========================================
+
+-- SELECT 'Roles creados:' as tipo;
+-- SELECT * FROM tbl_rol;
+
+-- SELECT 'Cargos creados:' as tipo;
+-- SELECT * FROM tbl_cargo;
+
+-- SELECT 'Tipos de equipos creados:' as tipo;
+-- SELECT * FROM tbl_tipo_equipo;
+

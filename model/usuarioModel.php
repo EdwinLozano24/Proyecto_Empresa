@@ -143,7 +143,32 @@ class UsuarioModel {
      * @param int $id_rol
      * @return array ['success' => bool, 'mensaje' => string, 'id_usuario' => int|null]
      */
-    public function registrarUsuario($nombre_usuario, $password, $documento, $id_rol = 2) {
+    public function registrarUsuario($nombre_usuario, $password, $documento, $id_rol = null) {
+        // Si no se proporciona id_rol, buscar el rol 'Usuario' por defecto
+        if ($id_rol === null) {
+            $stmt = $this->conexion->prepare("SELECT Id_Rol FROM tbl_rol WHERE Nombre_Rol = 'Usuario' LIMIT 1");
+            $stmt->execute();
+            $rol_result = $stmt->fetch();
+            
+            if ($rol_result) {
+                $id_rol = $rol_result['Id_Rol'];
+            } else {
+                // Si no existe, tomar el primer rol disponible
+                $stmt = $this->conexion->prepare("SELECT Id_Rol FROM tbl_rol ORDER BY Id_Rol ASC LIMIT 1");
+                $stmt->execute();
+                $rol_result = $stmt->fetch();
+                
+                if ($rol_result) {
+                    $id_rol = $rol_result['Id_Rol'];
+                } else {
+                    return [
+                        'success' => false,
+                        'mensaje' => 'No hay roles disponibles en el sistema. Contacte al administrador.'
+                    ];
+                }
+            }
+        }
+
         // Validaciones básicas
         if (empty($nombre_usuario) || empty($password) || empty($documento)) {
             return [

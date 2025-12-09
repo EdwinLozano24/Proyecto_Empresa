@@ -6,8 +6,8 @@
 
 session_start();
 
-require_once __DIR__ . '/app/conexion.php';
-require_once __DIR__ . '/controller/usuarioController.php';
+require_once __DIR__ . '/conexion.php';
+require_once __DIR__ . '/../controller/usuarioController.php';
 
 /**
  * Verifica si el usuario está autenticado

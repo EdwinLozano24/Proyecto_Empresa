@@ -150,7 +150,18 @@ class UsuarioController {
     }
 }
 
-// Procesar solicitud si se incluye este archivo
-$controller = new UsuarioController();
-$controller->procesarSolicitud();
+// ===================================
+// PROCESAR SOLICITUDES (EJECUCIÓN)
+// ===================================
+
+// Crear instancia del controlador y procesar solicitud
+try {
+    $controller = new UsuarioController();
+    $controller->procesarSolicitud();
+} catch (Exception $e) {
+    // Capturar cualquier error no previsto
+    $_SESSION['error_general'] = 'Error inesperado: ' . $e->getMessage();
+    header('Location: /inventario_equipos/view/loginRegister.php');
+    exit();
+}
 ?>
