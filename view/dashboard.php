@@ -3,11 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Dashboard Inventario - Gradezco</title>
   <?php
     // Proteger la página - requiere autenticación
     require_once __DIR__ . '/../app/protecciones.php';
     protegerPagina();
+    
+    // Headers para evitar caché del navegador
+    header('Cache-Control: no-cache, no-store, must-revalidate');
+    header('Pragma: no-cache');
+    header('Expires: 0');
     
     // Obtener datos del usuario actual
     $usuario = UsuarioController::obtenerUsuarioActual();
@@ -311,4 +319,27 @@
             <span class="location-rank">#2</span>
           </div>
           <p class="location-name">Edificio B - Piso 2</p>
-          <h3
+          <h3          <h3 class="location-count">89</h3>
+          <p class="location-label">equipos registrados</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Script para prevenir caché y manejar botón atrás -->
+  <script>
+    // Impedir el caché del navegador
+    history.pushState(null, null, location.href);
+    window.onpopstate = function() {
+      history.pushState(null, null, location.href);
+      // Redirigir a login cuando se intenta ir atrás
+      window.location.href = '/inventario_equipos/view/loginRegister.php';
+    };
+
+    // Prevenir recarga con caché
+    if (performance.navigation.type === 2) {
+      location.reload(true);
+    }
+  </script>
+</body>
+</html>

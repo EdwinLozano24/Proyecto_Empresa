@@ -4,7 +4,10 @@
  * Gestiona la lógica de autenticación, registro y gestión de usuarios
  */
 
-session_start();
+// Inicia sesión solo si no está activa
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 require_once __DIR__ . '/../app/conexion.php';
 require_once __DIR__ . '/../model/usuarioModel.php';
@@ -79,7 +82,7 @@ class UsuarioController {
 
     /**
      * Registra un nuevo usuario
-     */
+        */
     private function registrarUsuario() {
         $nombre_usuario = trim($_POST['Nombre_Usuario'] ?? '');
         $password = trim($_POST['Password_Usuario'] ?? '');
