@@ -133,5 +133,8 @@
     <!-- Script propio para alternar entre login/registro -->
     <script src="/inventario_equipos/assets/js/script.js"></script>
 
+    <!-- Script de validaciones en tiempo real -->
+    <script src="/inventario_equipos/assets/js/validaciones.js"></script>
+
 </body>
 </html>
