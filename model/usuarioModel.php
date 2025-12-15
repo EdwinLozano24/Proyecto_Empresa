@@ -12,6 +12,31 @@ class UsuarioModel {
     }
 
     /**
+     * Registra excepciones en un archivo de log para depuración
+     * No incluye contraseñas en los datos registrados
+     * @param string $context - Nombre del método o contexto
+     * @param \Exception $e - Excepción capturada
+     * @param array $extra - Datos adicionales a registrar (serán convertidos a JSON)
+     */
+    private function logException($context, $e, $extra = []) {
+        try {
+            $logFile = __DIR__ . '/../app/error.log';
+            $entry = [
+                'timestamp' => date('c'),
+                'context' => $context,
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'extra' => $extra
+            ];
+            @file_put_contents($logFile, json_encode($entry, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL, FILE_APPEND | LOCK_EX);
+        } catch (Exception $ex) {
+            // No interrumpir la ejecución por fallos en el logging
+        }
+    }
+
+    /**
      * Obtiene un usuario por nombre de usuario
      * @param string $nombre_usuario
      * @return array|null Datos del usuario o null si no existe
@@ -42,6 +67,7 @@ class UsuarioModel {
             $stmt->execute();
             return $stmt->fetch();
         } catch (PDOException $e) {
+            $this->logException('obtenerUsuarioPorNombre', $e, ['nombre_usuario' => $nombre_usuario]);
             return null;
         }
     }
@@ -77,6 +103,7 @@ class UsuarioModel {
             $stmt->execute();
             return $stmt->fetch();
         } catch (PDOException $e) {
+            $this->logException('obtenerUsuarioPorDocumento', $e, ['documento' => $documento]);
             return null;
         }
     }
@@ -112,6 +139,7 @@ class UsuarioModel {
             $resultado = $stmt->fetch();
             return $resultado['total'] > 0;
         } catch (PDOException $e) {
+            $this->logException('usuarioExiste', $e, ['nombre_usuario' => $nombre_usuario]);
             return false;
         }
     }
@@ -131,6 +159,7 @@ class UsuarioModel {
             $resultado = $stmt->fetch();
             return $resultado['total'] > 0;
         } catch (PDOException $e) {
+            $this->logException('documentoExiste', $e, ['documento' => $documento]);
             return false;
         }
     }
@@ -235,9 +264,11 @@ class UsuarioModel {
                 ];
             }
         } catch (PDOException $e) {
+            // Log completo para depuración (no incluir contraseña)
+            $this->logException('registrarUsuario', $e, ['nombre_usuario' => $nombre_usuario, 'documento' => $documento, 'id_rol' => $id_rol]);
             return [
                 'success' => false,
-                'mensaje' => 'Error en la base de datos: ' . $e->getMessage()
+                'mensaje' => 'Error en la base de datos. Contacte al administrador.'
             ];
         }
     }
@@ -267,6 +298,7 @@ class UsuarioModel {
             $stmt->execute();
             return $stmt->fetchAll();
         } catch (PDOException $e) {
+            $this->logException('obtenerTodosLosUsuarios', $e, []);
             return [];
         }
     }
@@ -306,9 +338,10 @@ class UsuarioModel {
                 ];
             }
         } catch (PDOException $e) {
+            $this->logException('actualizarPassword', $e, ['id_usuario' => $id_usuario]);
             return [
                 'success' => false,
-                'mensaje' => 'Error en la base de datos: ' . $e->getMessage()
+                'mensaje' => 'Error en la base de datos. Contacte al administrador.'
             ];
         }
     }
@@ -337,9 +370,10 @@ class UsuarioModel {
                 ];
             }
         } catch (PDOException $e) {
+            $this->logException('eliminarUsuario', $e, ['id_usuario' => $id_usuario]);
             return [
                 'success' => false,
-                'mensaje' => 'Error en la base de datos: ' . $e->getMessage()
+                'mensaje' => 'Error en la base de datos. Contacte al administrador.'
             ];
         }
     }

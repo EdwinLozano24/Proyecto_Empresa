@@ -6,9 +6,8 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     
-    // ==========================================
     // VALIDACIÓN: Solo números en documento
-    // ==========================================
+
     const documentoInput = document.getElementById('documento_usuario');
     if (documentoInput) {
         documentoInput.addEventListener('input', function(e) {
@@ -25,9 +24,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ==========================================
+
     // VALIDACIÓN: Nombre de Usuario (alfanumérico + guiones bajos)
-    // ==========================================
+
     const nombreUsuarioRegInput = document.getElementById('nombre_usuario_reg');
     if (nombreUsuarioRegInput) {
         nombreUsuarioRegInput.addEventListener('input', function(e) {
@@ -45,9 +44,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ==========================================
+
     // VALIDACIÓN: Contraseña (requisitos mínimos)
-    // ==========================================
+
     const passwordRegInput = document.getElementById('password_reg');
     if (passwordRegInput) {
         passwordRegInput.addEventListener('input', function(e) {
@@ -59,9 +58,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ==========================================
+
     // VALIDACIÓN: Nombre de Usuario Login
-    // ==========================================
+
     const loginNombreUsuarioInput = document.getElementById('login_nombre_usuario');
     if (loginNombreUsuarioInput) {
         loginNombreUsuarioInput.addEventListener('input', function(e) {
@@ -71,9 +70,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ==========================================
+
     // VALIDACIÓN: Formulario Registro Completo
-    // ==========================================
+
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         registerForm.addEventListener('submit', function(e) {

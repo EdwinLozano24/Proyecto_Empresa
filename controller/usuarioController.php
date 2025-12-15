@@ -98,6 +98,18 @@ class UsuarioController {
         // Llamar al modelo para registrar
         $resultado = $this->model->registrarUsuario($nombre_usuario, $password, $documento);
 
+        // Loguear intento de registro (archivo: app/registro.log)
+        try {
+            $maskedDocumento = $documento;
+            if (is_string($maskedDocumento) && strlen($maskedDocumento) > 4) {
+                $maskedDocumento = substr($maskedDocumento, 0, 2) . str_repeat('*', max(0, strlen($maskedDocumento) - 4)) . substr($maskedDocumento, -2);
+            }
+            $logEntry = date('c') . " | Registro intento | usuario: " . $nombre_usuario . " | documento: " . $maskedDocumento . " | resultado: " . json_encode($resultado) . PHP_EOL;
+            @file_put_contents(__DIR__ . '/../app/registro.log', $logEntry, FILE_APPEND | LOCK_EX);
+        } catch (Exception $e) {
+            // No bloquear la ejecución si falla el logging
+        }
+
         if ($resultado['success']) {
             $_SESSION['exito_registro'] = $resultado['mensaje'];
             $_SESSION['usuario_registrado'] = $nombre_usuario;

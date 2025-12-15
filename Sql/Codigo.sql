@@ -377,6 +377,7 @@ SET Nombre_Empleado = CapitalizarPalabras(Nombre_Empleado),
 -- Normalizar tipos de equipo
 UPDATE tbl_tipo_equipo
 SET Nombre_Tipo_Equipo = CapitalizarPalabras(Nombre_Tipo_Equipo),
+
     Descripcion_Tipo_Equipo = CapitalizarPalabras(Descripcion_Tipo_Equipo);
 
 -- Normalizar archivos
