@@ -4,7 +4,10 @@
  * Proporciona funciones para proteger páginas que requieren autenticación
  */
 
-session_start();
+ // Inicia sesión solo si no está activa
+ if (session_status() === PHP_SESSION_NONE) {
+     session_start();
+ }
 
 require_once __DIR__ . '/conexion.php';
 require_once __DIR__ . '/../controller/usuarioController.php';

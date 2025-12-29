@@ -1,0 +1,278 @@
+/* 
+ * Estilos para Formulario de Empleados
+ * Tema Oscuro con Acentos Rojos
+ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Negros y Grises Oscuros */
+  --primary: #212121;
+  --primary-light: #333333;
+  
+  /* Acentos */
+  --accent-green: #10b981;
+  --accent-red: #ef4444;
+  --accent-amber: #f59e0b;
+
+  /* Fondos */
+  --bg-dark: #121212;
+  --bg-gray: #1e1e1e;
+  --white: #ffffff;
+  
+  /* Textos */
+  --text-light: #e0e0e0;
+  --text-gray: #a0a0a0;
+  --text-lighter: #64748b;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: linear-gradient(to bottom right, var(--bg-dark), #0a0a0a);
+  color: var(--text-light);
+  background-image: url(/inventario_equipos/assets/img/fondo_login.png);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+main {
+  width: 100%;
+  max-width: 600px;
+  background: linear-gradient(135deg, #0a0a0a 0%, #300a0a 100%);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  border: 1px solid #444;
+  position: relative;
+  overflow: hidden;
+}
+
+main::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(239, 68, 68, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 2rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+h2::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 3px;
+  background: var(--accent-red);
+  margin: 0.75rem auto 0;
+  border-radius: 2px;
+}
+
+/* Formulario */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+  z-index: 1;
+}
+
+label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-light);
+  margin-bottom: -0.75rem;
+  letter-spacing: 0.3px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"] {
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: var(--text-light);
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="number"]::placeholder {
+  color: var(--text-gray);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus {
+  border-color: var(--accent-red);
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+}
+
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="number"]:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Campos requeridos */
+input[required] {
+  border-left: 3px solid var(--accent-red);
+}
+
+/* Botones */
+button[type="submit"] {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: var(--accent-red);
+  color: var(--white);
+  border: none;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+  margin-top: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+button[type="submit"]:hover {
+  background: #f87171;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.6);
+}
+
+button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+/* Enlace Volver */
+a {
+  display: block;
+  text-align: center;
+  padding: 0.875rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(5px);
+  color: var(--text-light);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Input hidden */
+input[type="hidden"] {
+  display: none;
+}
+
+/* Estados de validación */
+input:invalid:not(:placeholder-shown) {
+  border-color: var(--accent-red);
+}
+
+input:valid:not(:placeholder-shown) {
+  border-color: var(--accent-green);
+}
+
+/* Animación de entrada */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+main {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
+
+  main {
+    padding: 2rem 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="number"] {
+    padding: 0.75rem 1rem;
+  }
+
+  button[type="submit"] {
+    padding: 0.875rem 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  main {
+    padding: 1.5rem 1rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  label {
+    font-size: 0.8125rem;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="number"] {
+    font-size: 0.8125rem;
+  }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
