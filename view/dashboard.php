@@ -20,6 +20,17 @@
     // Obtener datos del usuario actual
     $usuario = UsuarioController::obtenerUsuarioActual();
     
+    // Contar empleados reales desde la base de datos
+    $empleados_count = 0;
+    try {
+      $pdo = conectar();
+      $stmt = $pdo->query("SELECT COUNT(*) AS total FROM tbl_empleado");
+      $row = $stmt->fetch();
+      $empleados_count = $row ? (int)$row['total'] : 0;
+    } catch (PDOException $e) {
+      $empleados_count = 0;
+    }
+    
     // Usar el CSS estilizado
     $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/Dashboard.css';
     $cssUrl = '/inventario_equipos/assets/css/Dashboard.css';
@@ -130,7 +141,7 @@
           <div class="stat-icon green">👥</div>
         </div>
         <div class="stat-value">
-          <h2>142</h2>
+          <h2><?php echo htmlspecialchars($empleados_count); ?></h2>
           <span class="stat-badge positive">+3</span>
         </div>
       </div>

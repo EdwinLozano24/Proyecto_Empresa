@@ -32,7 +32,10 @@ protegerPagina();
       <div class="alert alert-danger"><?php echo htmlspecialchars($_SESSION['error_empleado']); unset($_SESSION['error_empleado']); ?></div>
     <?php endif; ?>
 
-    <p><a class="btn btn-primary" href="/inventario_equipos/controller/empleadoController.php?accion=nuevo">Nuevo Empleado</a></p>
+    <p style="display:flex; gap:10px; align-items:center;">
+      <a class="btn btn-secondary" href="/inventario_equipos/view/dashboard.php">Volver al Dashboard</a>
+      <a class="btn btn-primary" href="/inventario_equipos/controller/empleadoController.php?accion=nuevo">Nuevo Empleado</a>
+    </p>
 
     <table class="table table-striped">
       <thead>

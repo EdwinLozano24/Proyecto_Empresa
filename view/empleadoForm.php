@@ -45,8 +45,25 @@ protegerPagina();
       <label for="Correo_Electronico">Correo</label>
       <input type="email" id="Correo_Electronico" name="Correo_Electronico" value="<?php echo htmlspecialchars($empleado['Correo_Electronico'] ?? ''); ?>">
 
-      <label for="Id_Cargo">ID Cargo (opcional)</label>
-      <input type="number" id="Id_Cargo" name="Id_Cargo" value="<?php echo htmlspecialchars($empleado['Id_Cargo'] ?? ''); ?>">
+      <?php
+        // Obtener lista de cargos desde la base de datos
+        $cargos = [];
+        try {
+            $pdo = conectar();
+            $stmt = $pdo->query("SELECT Id_Cargo, Nombre_Cargo FROM tbl_cargo ORDER BY Nombre_Cargo ASC");
+            $cargos = $stmt->fetchAll();
+        } catch (PDOException $e) {
+            $cargos = [];
+        }
+      ?>
+
+      <label for="Id_Cargo">Cargo (opcional)</label>
+      <select id="Id_Cargo" name="Id_Cargo">
+        <option value="">-- Ninguno --</option>
+        <?php foreach ($cargos as $c): ?>
+          <option value="<?php echo $c['Id_Cargo']; ?>" <?php echo (isset($empleado['Id_Cargo']) && $empleado['Id_Cargo'] == $c['Id_Cargo']) ? 'selected' : ''; ?>><?php echo htmlspecialchars($c['Nombre_Cargo']); ?></option>
+        <?php endforeach; ?>
+      </select>
 
       <?php if (!empty($empleado)): ?>
         <button type="submit" name="actualizarEmpleado">Actualizar Empleado</button>
