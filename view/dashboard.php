@@ -82,10 +82,8 @@
         <button class="nav-tab">Equipos</button>
         <button class="nav-tab">Mantenimiento</button>
         <button class="nav-tab">Reportes</button>
+        <a href="/inventario_equipos/controller/empleadoController.php?accion=listar" class="nav-tab">Empleados</a>
       </nav>
-      <div class="quick-links" style="margin-left: 20px; display:flex; gap:10px; align-items:center;">
-        <a href="/inventario_equipos/controller/empleadoController.php?accion=listar" class="btn-quick" style="padding:8px 12px; background: rgba(255,255,255,0.12); color: #fff; border-radius:6px; text-decoration:none; font-size:14px;">Empleados</a>
-      </div>
     </div>
   </header>  <main>
     <!-- Stats Grid -->

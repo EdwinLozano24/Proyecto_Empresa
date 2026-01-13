@@ -165,6 +165,76 @@ class UsuarioModel {
     }
 
     /**
+     * Verifica si el nombre de usuario existe excluyendo un id específico
+     */
+    public function usuarioExisteExcepto($nombre_usuario, $id_excluir) {
+        $query = "SELECT COUNT(*) AS total FROM tbl_usuario WHERE Nombre_Usuario = :nombre_usuario AND Id_Usuario != :id_excluir";
+        try {
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':nombre_usuario', $nombre_usuario, PDO::PARAM_STR);
+            $stmt->bindParam(':id_excluir', $id_excluir, PDO::PARAM_INT);
+            $stmt->execute();
+            $resultado = $stmt->fetch();
+            return $resultado['total'] > 0;
+        } catch (PDOException $e) {
+            $this->logException('usuarioExisteExcepto', $e, ['nombre_usuario' => $nombre_usuario, 'id_excluir' => $id_excluir]);
+            return false;
+        }
+    }
+
+    /**
+     * Verifica si el documento existe excluyendo un id específico
+     */
+    public function documentoExisteExcepto($documento, $id_excluir) {
+        $query = "SELECT COUNT(*) AS total FROM tbl_usuario WHERE documento_Usuario = :documento AND Id_Usuario != :id_excluir";
+        try {
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':documento', $documento, PDO::PARAM_STR);
+            $stmt->bindParam(':id_excluir', $id_excluir, PDO::PARAM_INT);
+            $stmt->execute();
+            $resultado = $stmt->fetch();
+            return $resultado['total'] > 0;
+        } catch (PDOException $e) {
+            $this->logException('documentoExisteExcepto', $e, ['documento' => $documento, 'id_excluir' => $id_excluir]);
+            return false;
+        }
+    }
+
+    /**
+     * Actualiza datos de usuario (nombre, documento, rol)
+     */
+    public function actualizarUsuario($id_usuario, $nombre_usuario, $documento, $id_rol) {
+        // Validaciones
+        if (empty($id_usuario) || empty($nombre_usuario) || empty($documento)) {
+            return ['success' => false, 'mensaje' => 'ID, nombre y documento son requeridos'];
+        }
+
+        // Verificar unicidad
+        if ($this->usuarioExisteExcepto($nombre_usuario, $id_usuario)) {
+            return ['success' => false, 'mensaje' => 'El nombre de usuario ya está en uso por otro registro'];
+        }
+        if ($this->documentoExisteExcepto($documento, $id_usuario)) {
+            return ['success' => false, 'mensaje' => 'El documento ya está asociado a otra cuenta'];
+        }
+
+        $query = "UPDATE tbl_usuario SET Nombre_Usuario = :nombre_usuario, documento_Usuario = :documento, Id_Rol = :id_rol WHERE Id_Usuario = :id_usuario";
+        try {
+            $stmt = $this->conexion->prepare($query);
+            $stmt->bindParam(':nombre_usuario', $nombre_usuario, PDO::PARAM_STR);
+            $stmt->bindParam(':documento', $documento, PDO::PARAM_STR);
+            $stmt->bindParam(':id_rol', $id_rol, PDO::PARAM_INT);
+            $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+            if ($stmt->execute()) {
+                return ['success' => true, 'mensaje' => 'Usuario actualizado'];
+            }
+            return ['success' => false, 'mensaje' => 'No se pudo actualizar el usuario'];
+        } catch (PDOException $e) {
+            $this->logException('actualizarUsuario', $e, ['id_usuario' => $id_usuario]);
+            return ['success' => false, 'mensaje' => 'Error en la base de datos'];
+        }
+    }
+
+    /**
      * Registra un nuevo usuario
      * @param string $nombre_usuario
      * @param string $password

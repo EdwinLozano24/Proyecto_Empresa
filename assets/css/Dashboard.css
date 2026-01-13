@@ -138,7 +138,32 @@ header {
   background: var(--accent-red); /* Pestaña activa en rojo */
   color: var(--white);
 }
+.quick-links {
+  display: flex;
+  gap: 0.5rem;
+}
 
+.quick-links {
+  padding: 0.5rem 1.5rem;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  color: var(--text-gray);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.quick-links:hover {
+  background: var(--primary-light); /* Hover oscuro */
+  color: var(--text-light);
+}
+
+.quick-links.active {
+  background: var(--accent-red); /* Pestaña activa en rojo */
+  color: var(--white);
+}
 /* Main Content */
 main {
   max-width: 1400px;
