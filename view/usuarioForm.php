@@ -10,7 +10,17 @@ verificarRol('Administrador');
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title><?php echo !empty($usuario) ? 'Editar Usuario' : 'Nuevo Usuario'; ?></title>
-  <link rel="stylesheet" href="/inventario_equipos/assets/css/LoginRegister.css">
+<?php
+    // Usar el CSS estilizado
+    $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/UsuarioForm.css';
+    $cssUrl = '/inventario_equipos/assets/css/UsuarioForm.css';
+    if (file_exists($cssPath)) {
+        echo '<link rel="stylesheet" href="' . $cssUrl . '">';
+    } else {
+        echo '<!-- CSS File not found at: ' . $cssPath . ' -->';
+    }
+    ?>
+
 </head>
 <body>
   <main>

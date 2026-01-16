@@ -1,0 +1,25 @@
+{
+    "1": [
+        "ver_equipos",
+        "editar_equipos",
+        "ver_empleados",
+        "editar_empleados",
+        "administrar_usuarios"
+    ],
+    "3": [
+        "ver_equipos",
+        "editar_equipos",
+        "ver_empleados",
+        "editar_empleados",
+        "administrar_usuarios"
+    ],
+    "4": [
+        "ver_equipos",
+        "editar_equipos",
+        "ver_empleados",
+        "editar_empleados"
+    ],
+    "2": [
+        "ver_equipos"
+    ]
+}

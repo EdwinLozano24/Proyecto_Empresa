@@ -130,19 +130,21 @@
         </div>
       </div>
 
-      <div class="stat-card">
-        <div class="stat-header">
-          <div class="stat-info">
-            <h3>Personal</h3>
-            <p>Empleados activos</p>
+      <a href="/inventario_equipos/controller/empleadoController.php?accion=listar" style="text-decoration: none; color: inherit; cursor: pointer;">
+        <div class="stat-card" style="cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)';">
+          <div class="stat-header">
+            <div class="stat-info">
+              <h3>Personal</h3>
+              <p>Empleados activos</p>
+            </div>
+            <div class="stat-icon green">👥</div>
           </div>
-          <div class="stat-icon green">👥</div>
+          <div class="stat-value">
+            <h2><?php echo htmlspecialchars($empleados_count); ?></h2>
+            <span class="stat-badge positive">+3</span>
+          </div>
         </div>
-        <div class="stat-value">
-          <h2><?php echo htmlspecialchars($empleados_count); ?></h2>
-          <span class="stat-badge positive">+3</span>
-        </div>
-      </div>
+      </a>
     </div>
 
     <!-- Main Grid -->

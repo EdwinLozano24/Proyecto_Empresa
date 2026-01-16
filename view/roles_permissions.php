@@ -3,6 +3,27 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/../app/protecciones.php';
 protegerPagina();
 verificarRol('Administrador');
+
+// Si la vista se abre directamente y no viene del controlador, cargar roles y permisos
+if (!isset($roles)) {
+  require_once __DIR__ . '/../app/conexion.php';
+  try {
+    $conexion = conectar();
+    $rstmt = $conexion->query("SELECT Id_Rol, Nombre_Rol FROM tbl_rol ORDER BY Nombre_Rol ASC");
+    $roles = $rstmt->fetchAll() ?: [];
+  } catch (PDOException $e) {
+    $roles = [];
+  }
+}
+
+if (!isset($permissions)) {
+  $permissions = ['ver_equipos','editar_equipos','ver_empleados','editar_empleados','administrar_usuarios'];
+}
+
+if (!isset($rolePerms)) {
+  $permFile = __DIR__ . '/../app/role_permissions.json';
+  $rolePerms = file_exists($permFile) ? (json_decode(file_get_contents($permFile), true) ?? []) : [];
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -10,7 +31,16 @@ verificarRol('Administrador');
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Permisos por Rol</title>
-  <link rel="stylesheet" href="/inventario_equipos/assets/css/LoginRegister.css">
+<?php
+    // Usar el CSS estilizado
+    $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/RolesP.css';
+    $cssUrl = '/inventario_equipos/assets/css/RolesP.css';
+    if (file_exists($cssPath)) {
+        echo '<link rel="stylesheet" href="' . $cssUrl . '">';
+    } else {
+        echo '<!-- CSS File not found at: ' . $cssPath . ' -->';
+    }
+    ?>
 </head>
 <body>
   <main>

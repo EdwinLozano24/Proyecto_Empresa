@@ -1,8 +1,4 @@
 <?php
-/**
- * Controlador: UsuarioController
- * Gestiona la lógica de autenticación, registro y gestión de usuarios
- */
 
 // Inicia sesión solo si no está activa
 if (session_status() === PHP_SESSION_NONE) {
