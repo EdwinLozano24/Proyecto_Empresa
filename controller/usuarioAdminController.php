@@ -50,7 +50,27 @@ class UsuarioAdminController {
     }
 
     public function listar() {
-        $usuarios = $this->model->obtenerTodosLosUsuarios();
+        $filtros_activos = false;
+        $filtros = [];
+        
+        // Procesar filtros desde GET
+        if (isset($_GET['filtrar'])) {
+            $filtros = [
+                'documento' => $_GET['documento'] ?? '',
+                'nombre_usuario' => $_GET['nombre_usuario'] ?? '',
+                'nombre_empleado' => $_GET['nombre_empleado'] ?? '',
+                'correo' => $_GET['correo'] ?? '',
+                'rol' => $_GET['rol'] ?? ''
+            ];
+            $filtros_activos = !empty(array_filter($filtros));
+        }
+        
+        if ($filtros_activos) {
+            $usuarios = $this->model->buscar($filtros);
+        } else {
+            $usuarios = $this->model->obtenerTodosLosUsuarios();
+        }
+        
         include __DIR__ . '/../view/usuarios.php';
     }
 

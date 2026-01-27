@@ -35,7 +35,70 @@ protegerPagina();
     <p style="display:flex; gap:10px; align-items:center;">
       <a class="btn btn-secondary" href="/inventario_equipos/view/dashboard.php">Volver al Dashboard</a>
       <a class="btn btn-primary" href="/inventario_equipos/controller/empleadoController.php?accion=nuevo">Nuevo Empleado</a>
+      <?php if ($filtros_activos ?? false): ?>
+        <a class="btn btn-warning" href="/inventario_equipos/controller/empleadoController.php?accion=listar">Limpiar Filtros</a>
+      <?php endif; ?>
     </p>
+
+    <!-- FORMULARIO DE BÚSQUEDA/FILTRADO -->
+    <div class="search-filter-container">
+      <div class="search-toggle">
+        <h4>🔍 Búsqueda Avanzada</h4>
+        <button type="button" class="btn-toggle-filter" onclick="toggleSearchForm()">↓ Expandir</button>
+      </div>
+      
+      <form id="searchForm" class="search-form" method="GET" action="/inventario_equipos/controller/empleadoController.php" style="display: none;">
+        <input type="hidden" name="accion" value="listar">
+        <input type="hidden" name="filtrar" value="1">
+        
+        <div class="filter-grid">
+          <div class="filter-group">
+            <label for="documento">Documento</label>
+            <input type="text" id="documento" name="documento" placeholder="Ej: 1234567890" value="<?php echo htmlspecialchars($filtros['documento'] ?? ''); ?>">
+          </div>
+
+          <div class="filter-group">
+            <label for="nombre">Nombre o Apellido</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan" value="<?php echo htmlspecialchars($filtros['nombre'] ?? ''); ?>">
+          </div>
+
+          <div class="filter-group">
+            <label for="correo">Correo Electrónico</label>
+            <input type="email" id="correo" name="correo" placeholder="Ej: juan@example.com" value="<?php echo htmlspecialchars($filtros['correo'] ?? ''); ?>">
+          </div>
+
+          <div class="filter-group">
+            <label for="telefono">Teléfono</label>
+            <input type="text" id="telefono" name="telefono" placeholder="Ej: 3001234567" value="<?php echo htmlspecialchars($filtros['telefono'] ?? ''); ?>">
+          </div>
+
+          <div class="filter-group">
+            <label for="cargo">Cargo</label>
+            <select id="cargo" name="cargo">
+              <option value="">-- Todos --</option>
+              <?php 
+                $cargos = [];
+                try {
+                    $pdo = conectar();
+                    $stmt = $pdo->query("SELECT Id_Cargo, Nombre_Cargo FROM tbl_cargo ORDER BY Nombre_Cargo");
+                    $cargos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } catch (Exception $e) {}
+              ?>
+              <?php foreach ($cargos as $cargo): ?>
+                <option value="<?php echo $cargo['Id_Cargo']; ?>" <?php echo ($filtros['cargo'] ?? '') == $cargo['Id_Cargo'] ? 'selected' : ''; ?>>
+                  <?php echo htmlspecialchars($cargo['Nombre_Cargo']); ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+        </div>
+
+        <div class="filter-actions">
+          <button type="submit" class="btn btn-primary">🔎 Buscar</button>
+          <button type="reset" class="btn btn-secondary">Limpiar Campos</button>
+        </div>
+      </form>
+    </div>
 
     <table class="table table-striped">
       <thead>
@@ -69,6 +132,29 @@ protegerPagina();
       </tbody>
     </table>
   </main>
+  
+  <script>
+    function toggleSearchForm() {
+      const form = document.getElementById('searchForm');
+      const btn = document.querySelector('.btn-toggle-filter');
+      if (form.style.display === 'none') {
+        form.style.display = 'grid';
+        btn.textContent = '↑ Contraer';
+      } else {
+        form.style.display = 'none';
+        btn.textContent = '↓ Expandir';
+      }
+    }
+
+    // Mostrar formulario si hay filtros activos
+    window.addEventListener('DOMContentLoaded', function() {
+      <?php if ($filtros_activos ?? false): ?>
+        document.getElementById('searchForm').style.display = 'grid';
+        document.querySelector('.btn-toggle-filter').textContent = '↑ Contraer';
+      <?php endif; ?>
+    });
+  </script>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

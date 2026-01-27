@@ -447,5 +447,91 @@ class UsuarioModel {
             ];
         }
     }
+
+    /**
+     * Búsqueda avanzada de usuarios con múltiples filtros
+     */
+    public function buscar($filtros) {
+        $query = "SELECT 
+                    u.Id_Usuario,
+                    u.Nombre_Usuario,
+                    u.documento_Usuario,
+                    u.Id_Empleado,
+                    u.Id_Rol,
+                    CONCAT(e.Nombre_Empleado, ' ', e.Apellido_Empleado) AS Nombre_Empleado,
+                    e.Correo_Electronico,
+                    r.Nombre_Rol
+                FROM tbl_usuario u
+                LEFT JOIN tbl_empleado e ON u.Id_Empleado = e.Id_Empleado
+                LEFT JOIN tbl_rol r ON u.Id_Rol = r.Id_Rol
+                WHERE 1=1";
+        
+        $parametros = [];
+        
+        if (!empty($filtros['documento'])) {
+            $query .= " AND u.documento_Usuario LIKE ?";
+            $parametros[] = '%' . $filtros['documento'] . '%';
+        }
+        
+        if (!empty($filtros['nombre_usuario'])) {
+            $query .= " AND u.Nombre_Usuario LIKE ?";
+            $parametros[] = '%' . $filtros['nombre_usuario'] . '%';
+        }
+        
+        if (!empty($filtros['nombre_empleado'])) {
+            $query .= " AND (e.Nombre_Empleado LIKE ? OR e.Apellido_Empleado LIKE ?)";
+            $parametros[] = '%' . $filtros['nombre_empleado'] . '%';
+            $parametros[] = '%' . $filtros['nombre_empleado'] . '%';
+        }
+        
+        if (!empty($filtros['correo'])) {
+            $query .= " AND e.Correo_Electronico LIKE ?";
+            $parametros[] = '%' . $filtros['correo'] . '%';
+        }
+        
+        if (!empty($filtros['rol'])) {
+            $query .= " AND u.Id_Rol = ?";
+            $parametros[] = $filtros['rol'];
+        }
+        
+        $query .= " ORDER BY u.Nombre_Usuario ASC";
+        
+        try {
+            $stmt = $this->conexion->prepare($query);
+            $stmt->execute($parametros);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            $this->logException('buscarUsuarios', $e);
+            return [];
+        }
+    }
+
+    /**
+     * Obtiene todos los usuarios con información completa
+     */
+    public function obtenerTodos() {
+        $query = "SELECT 
+                    u.Id_Usuario,
+                    u.Nombre_Usuario,
+                    u.documento_Usuario,
+                    u.Id_Empleado,
+                    u.Id_Rol,
+                    CONCAT(e.Nombre_Empleado, ' ', e.Apellido_Empleado) AS Nombre_Empleado,
+                    e.Correo_Electronico,
+                    r.Nombre_Rol
+                FROM tbl_usuario u
+                LEFT JOIN tbl_empleado e ON u.Id_Empleado = e.Id_Empleado
+                LEFT JOIN tbl_rol r ON u.Id_Rol = r.Id_Rol
+                ORDER BY u.Nombre_Usuario ASC";
+        
+        try {
+            $stmt = $this->conexion->prepare($query);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            $this->logException('obtenerTodos', $e);
+            return [];
+        }
+    }
 }
 ?>

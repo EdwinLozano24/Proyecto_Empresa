@@ -12,8 +12,12 @@ if (!isset($usuarios)) {
     $conexion = conectar();
     $usuarioModel = new UsuarioModel($conexion);
     $usuarios = $usuarioModel->obtenerTodosLosUsuarios();
+    $filtros_activos = false;
+    $filtros = [];
   } catch (Exception $e) {
     $usuarios = [];
+    $filtros_activos = false;
+    $filtros = [];
   }
 }
 ?>
@@ -48,7 +52,70 @@ if (!isset($usuarios)) {
       <a class="btn btn-secondary" href="/inventario_equipos/view/dashboard.php">Volver al Dashboard</a>
       <a class="btn btn-primary" href="/inventario_equipos/controller/usuarioAdminController.php?accion=nuevo">Nuevo Usuario</a>
       <a class="btn btn-info" href="/inventario_equipos/controller/usuarioAdminController.php?accion=roles">Gestionar Permisos por Rol</a>
+      <?php if ($filtros_activos ?? false): ?>
+        <a class="btn btn-warning" href="/inventario_equipos/controller/usuarioAdminController.php?accion=listar">Limpiar Filtros</a>
+      <?php endif; ?>
     </p>
+
+    <!-- FORMULARIO DE BÚSQUEDA/FILTRADO -->
+    <div class="search-filter-container">
+      <div class="search-toggle">
+        <h4>🔍 Búsqueda Avanzada</h4>
+        <button type="button" class="btn-toggle-filter" onclick="toggleSearchForm()">↓ Expandir</button>
+      </div>
+      
+      <form id="searchForm" class="search-form" method="GET" action="/inventario_equipos/controller/usuarioAdminController.php" style="display: none;">
+        <input type="hidden" name="accion" value="listar">
+        <input type="hidden" name="filtrar" value="1">
+        
+        <div class="filter-grid">
+          <div class="filter-group">
+            <label for="documento">Documento</label>
+            <input type="text" id="documento" name="documento" placeholder="Ej: 1234567890" value="<?php echo htmlspecialchars($filtros['documento'] ?? ''); ?>">
+          </div>
+
+          <div class="filter-group">
+            <label for="nombre_usuario">Nombre de Usuario</label>
+            <input type="text" id="nombre_usuario" name="nombre_usuario" placeholder="Ej: juan.perez" value="<?php echo htmlspecialchars($filtros['nombre_usuario'] ?? ''); ?>">
+          </div>
+
+          <div class="filter-group">
+            <label for="nombre_empleado">Nombre del Empleado</label>
+            <input type="text" id="nombre_empleado" name="nombre_empleado" placeholder="Ej: Juan" value="<?php echo htmlspecialchars($filtros['nombre_empleado'] ?? ''); ?>">
+          </div>
+
+          <div class="filter-group">
+            <label for="correo">Correo Electrónico</label>
+            <input type="email" id="correo" name="correo" placeholder="Ej: juan@example.com" value="<?php echo htmlspecialchars($filtros['correo'] ?? ''); ?>">
+          </div>
+
+          <div class="filter-group">
+            <label for="rol">Rol</label>
+            <select id="rol" name="rol">
+              <option value="">-- Todos --</option>
+              <?php 
+                $roles = [];
+                try {
+                    $pdo = conectar();
+                    $stmt = $pdo->query("SELECT Id_Rol, Nombre_Rol FROM tbl_rol ORDER BY Nombre_Rol");
+                    $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                } catch (Exception $e) {}
+              ?>
+              <?php foreach ($roles as $role): ?>
+                <option value="<?php echo $role['Id_Rol']; ?>" <?php echo ($filtros['rol'] ?? '') == $role['Id_Rol'] ? 'selected' : ''; ?>>
+                  <?php echo htmlspecialchars($role['Nombre_Rol']); ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+        </div>
+
+        <div class="filter-actions">
+          <button type="submit" class="btn btn-primary">🔎 Buscar</button>
+          <button type="reset" class="btn btn-secondary">Limpiar Campos</button>
+        </div>
+      </form>
+    </div>
 
     <table class="table table-striped">
       <thead>
@@ -80,5 +147,27 @@ if (!isset($usuarios)) {
       </tbody>
     </table>
   </main>
+
+  <script>
+    function toggleSearchForm() {
+      const form = document.getElementById('searchForm');
+      const btn = document.querySelector('.btn-toggle-filter');
+      if (form.style.display === 'none') {
+        form.style.display = 'grid';
+        btn.textContent = '↑ Contraer';
+      } else {
+        form.style.display = 'none';
+        btn.textContent = '↓ Expandir';
+      }
+    }
+
+    // Mostrar formulario si hay filtros activos
+    window.addEventListener('DOMContentLoaded', function() {
+      <?php if ($filtros_activos ?? false): ?>
+        document.getElementById('searchForm').style.display = 'grid';
+        document.querySelector('.btn-toggle-filter').textContent = '↑ Contraer';
+      <?php endif; ?>
+    });
+  </script>
 </body>
 </html>

@@ -55,7 +55,27 @@ class EmpleadoController {
     }
 
     public function listar() {
-        $empleados = $this->model->obtenerTodos();
+        $filtros_activos = false;
+        $filtros = [];
+        
+        // Procesar filtros desde GET
+        if (isset($_GET['filtrar'])) {
+            $filtros = [
+                'documento' => $_GET['documento'] ?? '',
+                'nombre' => $_GET['nombre'] ?? '',
+                'correo' => $_GET['correo'] ?? '',
+                'telefono' => $_GET['telefono'] ?? '',
+                'cargo' => $_GET['cargo'] ?? ''
+            ];
+            $filtros_activos = !empty(array_filter($filtros));
+        }
+        
+        if ($filtros_activos) {
+            $empleados = $this->model->buscar($filtros);
+        } else {
+            $empleados = $this->model->obtenerTodos();
+        }
+        
         include __DIR__ . '/../view/empleados.php';
     }
 

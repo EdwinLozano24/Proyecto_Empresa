@@ -102,5 +102,51 @@ class EmpleadoModel {
             return ['success' => false, 'mensaje' => 'Error en la base de datos'];
         }
     }
+
+    /**
+     * Búsqueda avanzada de empleados con múltiples filtros
+     */
+    public function buscar($filtros) {
+        $query = "SELECT Id_Empleado, documento_Empleado, Nombre_Empleado, Apellido_Empleado, Num_Telefono, Correo_Electronico, Id_Cargo FROM tbl_empleado WHERE 1=1";
+        
+        $parametros = [];
+        
+        if (!empty($filtros['documento'])) {
+            $query .= " AND documento_Empleado LIKE ?";
+            $parametros[] = '%' . $filtros['documento'] . '%';
+        }
+        
+        if (!empty($filtros['nombre'])) {
+            $query .= " AND (Nombre_Empleado LIKE ? OR Apellido_Empleado LIKE ?)";
+            $parametros[] = '%' . $filtros['nombre'] . '%';
+            $parametros[] = '%' . $filtros['nombre'] . '%';
+        }
+        
+        if (!empty($filtros['correo'])) {
+            $query .= " AND Correo_Electronico LIKE ?";
+            $parametros[] = '%' . $filtros['correo'] . '%';
+        }
+        
+        if (!empty($filtros['telefono'])) {
+            $query .= " AND Num_Telefono LIKE ?";
+            $parametros[] = '%' . $filtros['telefono'] . '%';
+        }
+        
+        if (!empty($filtros['cargo'])) {
+            $query .= " AND Id_Cargo = ?";
+            $parametros[] = $filtros['cargo'];
+        }
+        
+        $query .= " ORDER BY Nombre_Empleado ASC";
+        
+        try {
+            $stmt = $this->conexion->prepare($query);
+            $stmt->execute($parametros);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            @file_put_contents(__DIR__ . '/../app/error.log', date('c') . " | buscarEmpleados | " . $e->getMessage() . PHP_EOL, FILE_APPEND | LOCK_EX);
+            return [];
+        }
+    }
 }
 ?>
