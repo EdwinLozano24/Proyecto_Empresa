@@ -2,6 +2,15 @@
 if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/../app/protecciones.php';
 protegerPagina();
+
+// Inicializar variables esperadas por la vista para evitar warnings
+if (!isset($mensaje)) $mensaje = '';
+if (!isset($tipo_mensaje)) $tipo_mensaje = 'info';
+if (!isset($filtros_activos)) $filtros_activos = false;
+if (!isset($filtros)) $filtros = [];
+if (!isset($tiposEquipo)) $tiposEquipo = [];
+if (!isset($empleados)) $empleados = [];
+if (!isset($equipos)) $equipos = [];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -122,26 +131,41 @@ protegerPagina();
       </form>
     </div>
 
+    <?php
+    // Asegurar que exista una instancia de EquipoModel cuando la vista se carga directamente
+    if (!isset($equipoModel) || $equipoModel === null) {
+        require_once __DIR__ . '/../app/conexion.php';
+        require_once __DIR__ . '/../model/equipoModel.php';
+        try {
+            $pdo_tmp = conectar();
+            $equipoModel = new EquipoModel($pdo_tmp);
+        } catch (Throwable $e) {
+            // Si no se logra conectar/instanciar, dejamos $equipoModel en null
+            $equipoModel = null;
+        }
+    }
+    ?>
+
     <div class="stats">
       <div class="stat-card">
         <h5>Total Equipos</h5>
-        <p><?php echo $equipoModel->contarTotal(); ?></p>
+        <p><?php echo $equipoModel ? $equipoModel->contarTotal() : '0'; ?></p>
       </div>
       <div class="stat-card">
         <h5>Activos</h5>
-        <p><?php echo $equipoModel->contarPorEstado('Activo'); ?></p>
+        <p><?php echo $equipoModel ? $equipoModel->contarPorEstado('Activo') : '0'; ?></p>
       </div>
       <div class="stat-card">
         <h5>Inactivos</h5>
-        <p><?php echo $equipoModel->contarPorEstado('Inactivo'); ?></p>
+        <p><?php echo $equipoModel ? $equipoModel->contarPorEstado('Inactivo') : '0'; ?></p>
       </div>
       <div class="stat-card">
         <h5>En Mantenimiento</h5>
-        <p><?php echo $equipoModel->contarPorEstado('Mantenimiento'); ?></p>
+        <p><?php echo $equipoModel ? $equipoModel->contarPorEstado('Mantenimiento') : '0'; ?></p>
       </div>
       <div class="stat-card">
         <h5>Dado de Baja</h5>
-        <p><?php echo $equipoModel->contarPorEstado('Dado de Baja'); ?></p>
+        <p><?php echo $equipoModel ? $equipoModel->contarPorEstado('Dado de Baja') : '0'; ?></p>
       </div>
     </div>
 

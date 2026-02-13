@@ -79,9 +79,10 @@
 
       <nav class="nav-tabs">
         <button class="nav-tab active">Dashboard</button>
-        <button class="nav-tab">Equipos</button>
+        <a href="/inventario_equipos/controller/equipoController.php?accion=listar" class="nav-tab">Equipos</a>
         <button class="nav-tab">Mantenimiento</button>
         <button class="nav-tab">Reportes</button>
+        <a href="/inventario_equipos/controller/usuarioAdminController.php?accion=listar" class="nav-tab">Usuarios</a>
         <a href="/inventario_equipos/controller/empleadoController.php?accion=listar" class="nav-tab">Empleados</a>
       </nav>
     </div>
@@ -177,6 +178,7 @@
         <div class="feature-buttons">
           <button class="btn btn-primary">Nuevo Equipo</button>
           <button class="btn btn-secondary">Ver Reportes</button>
+          <a href="/inventario_equipos/controller/usuarioAdminController.php?accion=listar" class="btn btn-outline" style="margin-left:8px; text-decoration:none; display:inline-block; padding:8px 12px; border-radius:4px; border:1px solid #ccc; color:inherit;">Usuarios</a>
         </div>
       </div>
 
