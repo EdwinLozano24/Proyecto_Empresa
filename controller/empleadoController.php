@@ -9,6 +9,10 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Protección general (redirige a login si no está autenticado)
+require_once __DIR__ . '/../app/protecciones.php';
+protegerPagina();
+
 require_once __DIR__ . '/../app/conexion.php';
 require_once __DIR__ . '/../model/empleadoModel.php';
 

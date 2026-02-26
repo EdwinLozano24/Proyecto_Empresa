@@ -1,11 +1,11 @@
 <?php
 session_start();
 
-// Verificar si el usuario está autenticado
-if (!isset($_SESSION['Id_Usuario'])) {
-    header('Location: loginRegister.php');
-    exit();
-}
+// Proteger ruta usando helper común (verifica flag 'autenticado')
+require_once __DIR__ . '/../app/protecciones.php';
+protegerPagina();
+
+// nota: ya no comprobamos "Id_Usuario" directamente, el helper se encarga de validar la sesión
 
 require_once '../app/conexion.php';
 require_once '../model/equipoModel.php';
