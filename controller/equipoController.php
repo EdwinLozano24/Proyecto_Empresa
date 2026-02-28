@@ -16,6 +16,14 @@ $equipoModel = new EquipoModel($conexion);
 $accion = isset($_GET['accion']) ? $_GET['accion'] : 'listar';
 $mensaje = '';
 $tipo_mensaje = '';
+
+// Permitir mensajes flash enviados por redirección (PRG)
+if (isset($_GET['mensaje']) && $_GET['mensaje'] !== '') {
+    $mensaje = $_GET['mensaje'];
+}
+if (isset($_GET['tipo_mensaje']) && $_GET['tipo_mensaje'] !== '') {
+    $tipo_mensaje = $_GET['tipo_mensaje'];
+}
 $filtros_activos = false;
 $filtros = [];
 
@@ -92,6 +100,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $tipo_mensaje = 'danger';
         }
     }
+
+    // Evitar reenvío del formulario al recargar (Post-Redirect-Get)
+    $params = ['accion' => 'listar'];
+    if (!empty($mensaje)) $params['mensaje'] = $mensaje;
+    if (!empty($tipo_mensaje)) $params['tipo_mensaje'] = $tipo_mensaje;
+    header('Location: /inventario_equipos/controller/equipoController.php?' . http_build_query($params));
+    exit;
 }
 
 // CARGAR DATOS SEGÚN ACCIÓN
