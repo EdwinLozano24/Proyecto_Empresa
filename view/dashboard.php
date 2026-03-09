@@ -22,13 +22,64 @@
     
     // Contar empleados reales desde la base de datos
     $empleados_count = 0;
+    $equipos_total = 0;
+    $equipos_activos = 0;
+    $equipos_inactivos = 0;
+    $equipos_mantenimiento = 0;
+    $equipos_dado_baja = 0;
+    $ubicaciones_count = 0;
+
     try {
       $pdo = conectar();
+
       $stmt = $pdo->query("SELECT COUNT(*) AS total FROM tbl_empleado");
       $row = $stmt->fetch();
       $empleados_count = $row ? (int)$row['total'] : 0;
+
+      require_once __DIR__ . '/../model/equipoModel.php';
+      $equipoModel = new EquipoModel($pdo);
+      $equipos_total = $equipoModel->contarTotal();
+      $equipos_activos = $equipoModel->contarPorEstado('Activo');
+      $equipos_inactivos = $equipoModel->contarPorEstado('Inactivo');
+      $equipos_mantenimiento = $equipoModel->contarPorEstado('Mantenimiento');
+      $equipos_dado_baja = $equipoModel->contarPorEstado('Dado de Baja');
+
+      $stmt = $pdo->query("SELECT COUNT(DISTINCT Ubicacion_Equipo) AS total FROM tbl_equipos WHERE Ubicacion_Equipo IS NOT NULL AND Ubicacion_Equipo <> ''");
+      $row = $stmt->fetch();
+      $ubicaciones_count = $row ? (int)$row['total'] : 0;
+
+      // Tipos de equipo (top 4) + porcentaje
+      $tipos_equipos = [];
+      $stmt = $pdo->query("SELECT te.Nombre_Tipo_Equipo AS tipo, COUNT(e.Id_Equipo) AS total
+                           FROM tbl_tipo_equipo te
+                           LEFT JOIN tbl_equipos e ON te.Id_Tipo_Equipo = e.Id_Tipo_Equipo
+                           GROUP BY te.Id_Tipo_Equipo
+                           ORDER BY total DESC
+                           LIMIT 4");
+      $tipos_equipos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+      foreach ($tipos_equipos as &$tipo) {
+        $tipo['porcentaje'] = $equipos_total ? round(($tipo['total'] / $equipos_total) * 100) : 0;
+      }
+      unset($tipo);
+
+      // Ubicaciones principales (top 2)
+      $top_ubicaciones = [];
+      $stmt = $pdo->query("SELECT Ubicacion_Equipo AS ubicacion, COUNT(*) AS total
+                           FROM tbl_equipos
+                           WHERE Ubicacion_Equipo IS NOT NULL AND Ubicacion_Equipo <> ''
+                           GROUP BY Ubicacion_Equipo
+                           ORDER BY total DESC
+                           LIMIT 2");
+      $top_ubicaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+      $porcentaje_activo = $equipos_total ? round(($equipos_activos / $equipos_total) * 100) : 0;
+      $porcentaje_mantenimiento = $equipos_total ? round(($equipos_mantenimiento / $equipos_total) * 100) : 0;
+      $porcentaje_inactivo = $equipos_total ? round(($equipos_inactivos / $equipos_total) * 100) : 0;
+      $porcentaje_dado_baja = $equipos_total ? round(($equipos_dado_baja / $equipos_total) * 100) : 0;
+
     } catch (PDOException $e) {
-      $empleados_count = 0;
+      // Si falla la conexión, se usan valores por defecto (0)
     }
     
     // Usar el CSS estilizado
@@ -97,8 +148,8 @@
           <div class="stat-icon green">📦</div>
         </div>
         <div class="stat-value">
-          <h2>847</h2>
-          <span class="stat-badge positive">+12%</span>
+          <h2><?php echo htmlspecialchars($equipos_total); ?></h2>
+          <span class="stat-badge positive"></span>
         </div>
       </div>
 
@@ -111,8 +162,8 @@
           <div class="stat-icon green">📊</div>
         </div>
         <div class="stat-value">
-          <h2>723</h2>
-          <span class="stat-badge positive">+5%</span>
+          <h2><?php echo htmlspecialchars($equipos_activos); ?></h2>
+          <span class="stat-badge positive"><?php echo $equipos_total ? '+' . $porcentaje_activo . '%' : ''; ?></span>
         </div>
       </div>
 
@@ -125,8 +176,8 @@
           <div class="stat-icon amber">⚠️</div>
         </div>
         <div class="stat-value">
-          <h2>34</h2>
-          <span class="stat-badge negative">+8</span>
+          <h2><?php echo htmlspecialchars($equipos_mantenimiento); ?></h2>
+          <span class="stat-badge negative"><?php echo $equipos_total ? '+' . $porcentaje_mantenimiento . '%' : ''; ?></span>
         </div>
       </div>
 
@@ -162,15 +213,15 @@
         </p>
         <div class="feature-stats">
           <div class="feature-stat">
-            <h3>847</h3>
+            <h3><?php echo htmlspecialchars($equipos_total); ?></h3>
             <p>Equipos registrados</p>
           </div>
           <div class="feature-stat">
-            <h3>34</h3>
+            <h3><?php echo htmlspecialchars($equipos_mantenimiento); ?></h3>
             <p>Mantenimientos activos</p>
           </div>
           <div class="feature-stat">
-            <h3>15</h3>
+            <h3><?php echo htmlspecialchars($ubicaciones_count); ?></h3>
             <p>Ubicaciones</p>
           </div>
         </div>
@@ -230,27 +281,27 @@
         </div>
         <div class="status-list">
           <div class="status-item">
-            <h4>Activo <span>723</span></h4>
+            <h4>Activo <span><?php echo htmlspecialchars($equipos_activos); ?></span></h4>
             <div class="progress-bar">
-              <div class="progress-fill green" style="width: 85%"></div>
+              <div class="progress-fill green" style="width: <?php echo htmlspecialchars($porcentaje_activo); ?>%"></div>
             </div>
           </div>
           <div class="status-item">
-            <h4>Mantenimiento <span>34</span></h4>
+            <h4>Mantenimiento <span><?php echo htmlspecialchars($equipos_mantenimiento); ?></span></h4>
             <div class="progress-bar">
-              <div class="progress-fill amber" style="width: 4%"></div>
+              <div class="progress-fill amber" style="width: <?php echo htmlspecialchars($porcentaje_mantenimiento); ?>%"></div>
             </div>
           </div>
           <div class="status-item">
-            <h4>Inactivo <span>67</span></h4>
+            <h4>Inactivo <span><?php echo htmlspecialchars($equipos_inactivos); ?></span></h4>
             <div class="progress-bar">
-              <div class="progress-fill gray" style="width: 8%"></div>
+              <div class="progress-fill gray" style="width: <?php echo htmlspecialchars($porcentaje_inactivo); ?>%"></div>
             </div>
           </div>
           <div class="status-item">
-            <h4>Dado de Baja <span>23</span></h4>
+            <h4>Dado de Baja <span><?php echo htmlspecialchars($equipos_dado_baja); ?></span></h4>
             <div class="progress-bar">
-              <div class="progress-fill red" style="width: 3%"></div>
+              <div class="progress-fill red" style="width: <?php echo htmlspecialchars($porcentaje_dado_baja); ?>%"></div>
             </div>
           </div>
         </div>
@@ -265,46 +316,30 @@
           <span class="card-icon">🖥️</span>
         </div>
         <div class="type-list">
-          <div class="type-item">
-            <div class="type-info">
-              <div class="type-badge">38%</div>
-              <div class="type-details">
-                <h4>Computadores</h4>
-                <p>324 equipos</p>
+          <?php if (!empty($tipos_equipos)): ?>
+            <?php foreach ($tipos_equipos as $tipo): ?>
+              <div class="type-item">
+                <div class="type-info">
+                  <div class="type-badge"><?php echo htmlspecialchars($tipo['porcentaje']); ?>%</div>
+                  <div class="type-details">
+                    <h4><?php echo htmlspecialchars($tipo['tipo']); ?></h4>
+                    <p><?php echo htmlspecialchars($tipo['total']); ?> equipos</p>
+                  </div>
+                </div>
+                <span class="type-trend">📈</span>
+              </div>
+            <?php endforeach; ?>
+          <?php else: ?>
+            <div class="type-item">
+              <div class="type-info">
+                <div class="type-badge">0%</div>
+                <div class="type-details">
+                  <h4>No hay tipos</h4>
+                  <p>Sin datos</p>
+                </div>
               </div>
             </div>
-            <span class="type-trend">📈</span>
-          </div>
-          <div class="type-item">
-            <div class="type-info">
-              <div class="type-badge">34%</div>
-              <div class="type-details">
-                <h4>Monitores</h4>
-                <p>289 equipos</p>
-              </div>
-            </div>
-            <span class="type-trend">📈</span>
-          </div>
-          <div class="type-item">
-            <div class="type-info">
-              <div class="type-badge">17%</div>
-              <div class="type-details">
-                <h4>Impresoras</h4>
-                <p>145 equipos</p>
-              </div>
-            </div>
-            <span class="type-trend">📈</span>
-          </div>
-          <div class="type-item">
-            <div class="type-info">
-              <div class="type-badge">11%</div>
-              <div class="type-details">
-                <h4>Periféricos</h4>
-                <p>89 equipos</p>
-              </div>
-            </div>
-            <span class="type-trend">📈</span>
-          </div>
+          <?php endif; ?>
         </div>
       </div>
     </div>
@@ -319,24 +354,29 @@
         <span class="card-icon">📍</span>
       </div>
       <div class="locations-grid">
-        <div class="location-item">
-          <div class="location-header">
-            <span>📍</span>
-            <span class="location-rank">#1</span>
+        <?php if (!empty($top_ubicaciones)): ?>
+          <?php foreach ($top_ubicaciones as $index => $loc): ?>
+            <div class="location-item">
+              <div class="location-header">
+                <span>📍</span>
+                <span class="location-rank">#<?php echo $index + 1; ?></span>
+              </div>
+              <p class="location-name"><?php echo htmlspecialchars($loc['ubicacion']); ?></p>
+              <h3 class="location-count"><?php echo htmlspecialchars($loc['total']); ?></h3>
+              <p class="location-label">equipos registrados</p>
+            </div>
+          <?php endforeach; ?>
+        <?php else: ?>
+          <div class="location-item">
+            <div class="location-header">
+              <span>📍</span>
+              <span class="location-rank">#1</span>
+            </div>
+            <p class="location-name">Sin ubicaciones</p>
+            <h3 class="location-count">0</h3>
+            <p class="location-label">equipos registrados</p>
           </div>
-          <p class="location-name">Edificio A - Piso 3</p>
-          <h3 class="location-count">156</h3>
-          <p class="location-label">equipos registrados</p>
-        </div>
-        <div class="location-item">
-          <div class="location-header">
-            <span>📍</span>
-            <span class="location-rank">#2</span>
-          </div>
-          <p class="location-name">Edificio B - Piso 2</p>
-          <h3          <h3 class="location-count">89</h3>
-          <p class="location-label">equipos registrados</p>
-        </div>
+        <?php endif; ?>
       </div>
     </section>
   </main>
