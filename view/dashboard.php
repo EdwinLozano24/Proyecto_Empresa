@@ -80,7 +80,7 @@
       <nav class="nav-tabs">
         <button class="nav-tab active">Dashboard</button>
         <a href="/inventario_equipos/controller/equipoController.php?accion=listar" class="nav-tab">Equipos</a>
-        <button class="nav-tab">Mantenimiento</button>
+        <a href="/inventario_equipos/controller/mantenimientoController.php?accion=listar" class="nav-tab">Mantenimiento</a>
         <a href="/inventario_equipos/controller/usuarioAdminController.php?accion=listar" class="nav-tab">Usuarios</a>
         <a href="/inventario_equipos/controller/empleadoController.php?accion=listar" class="nav-tab">Empleados</a>
       </nav>

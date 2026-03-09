@@ -28,6 +28,8 @@ if (!isset($equipos)) $equipos = [];
         echo '<!-- CSS File not found at: ' . $cssPath . ' -->';
     }
     ?>
+    <!-- Choices.js para select buscable -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
   
 </head>
 <body>
@@ -266,6 +268,21 @@ if (!isset($equipos)) $equipos = [];
     }
   </script>
 
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var propietarioSelect = document.getElementById('propietario');
+      if (propietarioSelect) {
+        new Choices(propietarioSelect, {
+          searchEnabled: true,
+          shouldSort: false,
+          itemSelectText: '',
+          placeholder: true,
+          placeholderValue: propietarioSelect.querySelector('option[value=""]')?.textContent || 'Buscar...'
+        });
+      }
+    });
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
