@@ -30,6 +30,9 @@ if (!isset($equipos)) $equipos = [];
     ?>
     <!-- Choices.js para select buscable -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
   
 </head>
 <body>
@@ -171,7 +174,7 @@ if (!isset($equipos)) $equipos = [];
       </div>
     </div>
 
-    <table class="table table-striped">
+    <table id="equiposTable" class="table table-striped">
       <thead>
         <tr>
           <th>ID</th>
@@ -195,7 +198,7 @@ if (!isset($equipos)) $equipos = [];
               <td><?php echo htmlspecialchars($equipo['Marca_Equipo'] ?? 'N/A'); ?></td>
               <td><?php echo htmlspecialchars($equipo['Numero_Serie'] ?? 'N/A'); ?></td>
               <td><?php echo htmlspecialchars($equipo['Ubicacion_Equipo'] ?? 'N/A'); ?></td>
-              <td><?php echo htmlspecialchars($equipo['Propietario_Nombre'] ?? 'Sin propietario'); ?></td>
+              <td><?php $propNombre = trim($equipo['Propietario_Nombre'] ?? ''); echo htmlspecialchars($propNombre ?: 'Sin propietario'); ?></td>
               <td><?php echo htmlspecialchars($equipo['Nombre_Tipo_Equipo'] ?? 'N/A'); ?></td>
               <td>
                 <span class="badge estado-<?php echo strtolower(str_replace(' ', '-', $equipo['Estado_Equipo'])); ?>">
@@ -283,6 +286,27 @@ if (!isset($equipos)) $equipos = [];
       }
     });
   </script>
+
+  <!-- jQuery + DataTables -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.jQuery && $.fn.dataTable) {
+        $('#equiposTable').DataTable({
+          pageLength: 25,
+          lengthMenu: [[25, 50, 100], [25, 50, 100]],
+          language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+          },
+          columnDefs: [
+            { orderable: false, targets: -1 } // No ordenar acciones
+          ]
+        });
+      }
+    });
+  </script>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

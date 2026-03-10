@@ -18,7 +18,7 @@ class EquipoModel {
                     e.Numero_Serie,
                     e.Ubicacion_Equipo,
                     e.Propietario_Equipo,
-                    CONCAT(emp.Nombre_Empleado, ' ', emp.Apellido_Empleado) AS Propietario_Nombre,
+                    CONCAT(emp.Nombre_Empleado, ' ', IFNULL(emp.Apellido_Empleado, '')) AS Propietario_Nombre,
                     e.Estado_Equipo,
                     e.Fecha_Ad_Equipo,
                     te.Nombre_Tipo_Equipo,
@@ -43,7 +43,7 @@ class EquipoModel {
                     e.Numero_Serie,
                     e.Ubicacion_Equipo,
                     e.Propietario_Equipo,
-                    CONCAT(emp.Nombre_Empleado, ' ', emp.Apellido_Empleado) AS Propietario_Nombre,
+                    CONCAT(IFNULL(emp.Nombre_Empleado, ''), ' ', IFNULL(emp.Apellido_Empleado, '')) AS Propietario_Nombre,
                     e.Estado_Equipo,
                     e.Fecha_Ad_Equipo,
                     e.Id_Tipo_Equipo,
@@ -71,7 +71,9 @@ class EquipoModel {
      * Obtiene todos los empleados (para propietarios)
      */
     public function obtenerEmpleados() {
-        $sql = "SELECT Id_Empleado, CONCAT(Nombre_Empleado, ' ', Apellido_Empleado) AS Nombre FROM tbl_empleado ORDER BY Nombre_Empleado";
+        // Si Apellido_Empleado es NULL, el CONCAT en MySQL devuelve NULL.
+        // Usamos IFNULL para evitar filas sin texto en el <select> de propietario.
+        $sql = "SELECT Id_Empleado, CONCAT(Nombre_Empleado, ' ', IFNULL(Apellido_Empleado, '')) AS Nombre FROM tbl_empleado ORDER BY Nombre_Empleado";
         $resultado = $this->conexion->query($sql);
         return $resultado->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -182,7 +184,7 @@ class EquipoModel {
                     e.Numero_Serie,
                     e.Ubicacion_Equipo,
                     e.Propietario_Equipo,
-                    CONCAT(emp.Nombre_Empleado, ' ', emp.Apellido_Empleado) AS Propietario_Nombre,
+                    CONCAT(emp.Nombre_Empleado, ' ', IFNULL(emp.Apellido_Empleado, '')) AS Propietario_Nombre,
                     e.Estado_Equipo,
                     e.Fecha_Ad_Equipo,
                     te.Nombre_Tipo_Equipo,
@@ -209,7 +211,7 @@ class EquipoModel {
                     e.Numero_Serie,
                     e.Ubicacion_Equipo,
                     e.Propietario_Equipo,
-                    CONCAT(emp.Nombre_Empleado, ' ', emp.Apellido_Empleado) AS Propietario_Nombre,
+                    CONCAT(emp.Nombre_Empleado, ' ', IFNULL(emp.Apellido_Empleado, '')) AS Propietario_Nombre,
                     e.Estado_Equipo,
                     e.Fecha_Ad_Equipo,
                     te.Nombre_Tipo_Equipo,

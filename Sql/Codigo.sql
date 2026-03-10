@@ -33,7 +33,7 @@ CREATE TABLE tbl_cargo (
 -- Tabla: Empleados
 CREATE TABLE tbl_empleado (
     Id_Empleado INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    documento_Empleado VARCHAR(50) UNIQUE NOT NULL,
+    documento_Empleado VARCHAR(50) NOT NULL,
     Nombre_Empleado VARCHAR(255),
     Apellido_Empleado VARCHAR(255),
     Num_Telefono VARCHAR(20),
