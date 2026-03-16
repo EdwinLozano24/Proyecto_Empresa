@@ -91,9 +91,11 @@ CREATE TABLE tbl_mantenimiento (
 CREATE TABLE tbl_historial (
     Id_Historial INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     Id_Equipo INT,
-    Ubicacion_Antigua VARCHAR(255),
+    Tipo_Entidad ENUM('Equipo', 'Mantenimiento') NOT NULL DEFAULT 'Equipo',
+    Campo_Cambiado VARCHAR(255),
+    Valor_Anterior VARCHAR(255),
     Descripcion_Historial VARCHAR(255),
-    Ubicacion_Nueva VARCHAR(255),
+    Valor_Nuevo VARCHAR(255),
     Fecha_Cambio DATE,
     Id_Empleado INT,
     FOREIGN KEY (Id_Equipo) REFERENCES tbl_equipos(Id_Equipo),
@@ -348,19 +350,34 @@ CREATE TRIGGER trg_historial_bi
 BEFORE INSERT ON tbl_historial
 FOR EACH ROW
 BEGIN
-    SET NEW.Ubicacion_Antigua   = CapitalizarPalabras(NEW.Ubicacion_Antigua);
     SET NEW.Descripcion_Historial = CapitalizarPalabras(NEW.Descripcion_Historial);
-    SET NEW.Ubicacion_Nueva     = CapitalizarPalabras(NEW.Ubicacion_Nueva);
 END$$
 
 CREATE TRIGGER trg_historial_bu
 BEFORE UPDATE ON tbl_historial
 FOR EACH ROW
 BEGIN
-    SET NEW.Ubicacion_Antigua   = CapitalizarPalabras(NEW.Ubicacion_Antigua);
     SET NEW.Descripcion_Historial = CapitalizarPalabras(NEW.Descripcion_Historial);
-    SET NEW.Ubicacion_Nueva     = CapitalizarPalabras(NEW.Ubicacion_Nueva);
 END$$
+
+-- Triggers de auditoría para equipos y mantenimientos
+CREATE TRIGGER trg_equipos_auditoria AFTER UPDATE ON tbl_equipos
+FOR EACH ROW
+BEGIN
+    IF OLD.Marca_Equipo != NEW.Marca_Equipo THEN
+        INSERT INTO tbl_historial (Id_Equipo, Tipo_Entidad, Campo_Cambiado, Valor_Anterior, Valor_Nuevo, Descripcion_Historial, Fecha_Cambio, Id_Empleado)
+        VALUES (NEW.Id_Equipo, 'Equipo', 'Marca_Equipo', OLD.Marca_Equipo, NEW.Marca_Equipo, CONCAT('Cambio de marca'), CURDATE(), NEW.Propietario_Equipo);
+    END IF;
+    -- Agregar más IF para otros campos
+END$$
+
+CREATE TRIGGER trg_mantenimiento_auditoria_insert AFTER INSERT ON tbl_mantenimiento
+FOR EACH ROW
+BEGIN
+    INSERT INTO tbl_historial (Id_Equipo, Tipo_Entidad, Campo_Cambiado, Valor_Anterior, Valor_Nuevo, Descripcion_Historial, Fecha_Cambio, Id_Empleado)
+    VALUES (NEW.Id_Equipo, 'Mantenimiento', 'Nuevo_Mantenimiento', NULL, NEW.Id_Mantenimiento, CONCAT('Nuevo mantenimiento: ', NEW.Descripcion_Mantenimiento), NEW.Fecha_Mantenimiento, NEW.Id_Empleado);
+END$$
+
 DELIMITER ;
 
 -- 11) NORMALIZAR datos existentes (ejecutar después de crear funciones y triggers)

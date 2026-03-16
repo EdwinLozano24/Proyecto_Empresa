@@ -134,6 +134,7 @@
         <a href="/inventario_equipos/controller/mantenimientoController.php?accion=listar" class="nav-tab">Mantenimiento</a>
         <a href="/inventario_equipos/controller/usuarioAdminController.php?accion=listar" class="nav-tab">Usuarios</a>
         <a href="/inventario_equipos/controller/empleadoController.php?accion=listar" class="nav-tab">Empleados</a>
+        <a href="/inventario_equipos/controller/historialController.php?accion=listar" class="nav-tab">Historial</a>
       </nav>
     </div>
   </header>  <main>

@@ -201,12 +201,13 @@ if (!isset($equipos)) $equipos = [];
               <td><?php echo htmlspecialchars($equipo['Fecha_Ad_Equipo'] ?? 'N/A'); ?></td>
               <td>
                 <a class="btn btn-sm btn-secondary" href="/inventario_equipos/controller/equipoController.php?accion=editar&id=<?php echo $equipo['Id_Equipo']; ?>">Editar</a>
+                <a class="btn btn-sm btn-info" href="/inventario_equipos/controller/historialController.php?accion=equipo&id=<?php echo $equipo['Id_Equipo']; ?>">Historial</a>
                 <button class="btn btn-sm btn-danger" onclick="eliminarEquipo(<?php echo $equipo['Id_Equipo']; ?>)">Eliminar</button>
               </td>
             </tr>
           <?php endforeach; ?>
         <?php else: ?>
-          <tr><td colspan="10" style="text-align: center;">No hay equipos registrados.</td></tr>
+          <tr><td colspan="9" style="text-align: center;">No hay equipos registrados.</td></tr>
         <?php endif; ?>
       </tbody>
     </table>

@@ -122,6 +122,10 @@ if (!isset($usuarios)) {
       </form>
     </div>
 
+    <?php if (empty($usuarios)): ?>
+      <p style="text-align: center;">No hay usuarios registrados.</p>
+    <?php else: ?>
+
     <table id="usuariosTable" class="table table-striped">
       <thead>
         <tr>
@@ -133,24 +137,22 @@ if (!isset($usuarios)) {
         </tr>
       </thead>
       <tbody>
-        <?php if (!empty($usuarios)): ?>
-          <?php foreach ($usuarios as $u): ?>
-            <tr>
-              <td><?php echo htmlspecialchars($u['Id_Usuario']); ?></td>
-              <td><?php echo htmlspecialchars($u['documento_Usuario']); ?></td>
-              <td><?php echo htmlspecialchars($u['Nombre_Usuario']); ?></td>
-              <td><?php echo htmlspecialchars($u['Nombre_Rol'] ?? ''); ?></td>
-              <td>
-                <a class="btn btn-sm btn-secondary" href="/inventario_equipos/controller/usuarioAdminController.php?accion=editar&id=<?php echo $u['Id_Usuario']; ?>">Editar</a>
-                <a class="btn btn-sm btn-danger" href="/inventario_equipos/controller/usuarioAdminController.php?accion=eliminar&id=<?php echo $u['Id_Usuario']; ?>" onclick="return confirm('Eliminar usuario?');">Eliminar</a>
-              </td>
-            </tr>
-          <?php endforeach; ?>
-        <?php else: ?>
-          <tr><td colspan="5">No hay usuarios registrados.</td></tr>
-        <?php endif; ?>
+        <?php foreach ($usuarios as $u): ?>
+          <tr>
+            <td><?php echo htmlspecialchars($u['Id_Usuario']); ?></td>
+            <td><?php echo htmlspecialchars($u['documento_Usuario']); ?></td>
+            <td><?php echo htmlspecialchars($u['Nombre_Usuario']); ?></td>
+            <td><?php echo htmlspecialchars($u['Nombre_Rol'] ?? ''); ?></td>
+            <td>
+              <a class="btn btn-sm btn-secondary" href="/inventario_equipos/controller/usuarioAdminController.php?accion=editar&id=<?php echo $u['Id_Usuario']; ?>">Editar</a>
+              <a class="btn btn-sm btn-danger" href="/inventario_equipos/controller/usuarioAdminController.php?accion=eliminar&id=<?php echo $u['Id_Usuario']; ?>" onclick="return confirm('Eliminar usuario?');">Eliminar</a>
+            </td>
+          </tr>
+        <?php endforeach; ?>
       </tbody>
     </table>
+
+    <?php endif; ?>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
@@ -174,7 +176,7 @@ if (!isset($usuarios)) {
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      if (window.jQuery && $.fn.dataTable) {
+      if (window.jQuery && $.fn.dataTable && document.getElementById('usuariosTable')) {
         $('#usuariosTable').DataTable({
           pageLength: 25,
           lengthMenu: [[25, 50, 100], [25, 50, 100]],

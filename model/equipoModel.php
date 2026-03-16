@@ -88,7 +88,7 @@ class EquipoModel {
                     Estado_Equipo,
                     Fecha_Ad_Equipo,
                     Id_Tipo_Equipo
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)";
         
         $stmt = $this->conexion->prepare($sql);
         

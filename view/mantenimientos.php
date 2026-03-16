@@ -43,6 +43,7 @@ if (!isset($equipos)) $equipos = [];
     <p style="display:flex; gap:10px; align-items:center;">
       <a class="btn btn-secondary" href="/inventario_equipos/view/dashboard.php">Volver al Dashboard</a>
       <a class="btn btn-primary" href="/inventario_equipos/controller/equipoController.php?accion=listar">Ver todos los equipos</a>
+      <a class="btn btn-success" href="/inventario_equipos/controller/mantenimientoController.php?accion=agregar">Registrar Mantenimiento</a>
     </p>
 
     <?php if (empty($equipos)): ?>
@@ -80,6 +81,7 @@ if (!isset($equipos)) $equipos = [];
             <td><?php echo htmlspecialchars($equipo['Fecha_Ad_Equipo'] ?? 'N/A'); ?></td>
             <td>
               <a class="btn btn-sm btn-secondary" href="/inventario_equipos/controller/equipoController.php?accion=editar&id=<?php echo $equipo['Id_Equipo']; ?>">Editar</a>
+              <a class="btn btn-sm btn-info" href="/inventario_equipos/controller/mantenimientoController.php?accion=ver&id_equipo=<?php echo $equipo['Id_Equipo']; ?>">Ver Mantenimientos</a>
             </td>
           </tr>
         <?php endforeach; ?>

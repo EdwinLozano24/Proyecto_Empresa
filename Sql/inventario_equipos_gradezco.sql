@@ -35,6 +35,7 @@ END//
 CREATE FUNCTION `CapitalizarPalabras` (`txt` VARCHAR(255)) RETURNS VARCHAR(255) CHARSET utf8mb4 COLLATE utf8mb4_general_ci DETERMINISTIC BEGIN
     DECLARE resultado VARCHAR(255) DEFAULT '';
     DECLARE palabra VARCHAR(255);
+
     DECLARE espacio_pos INT DEFAULT 1;
     DECLARE len INT;
     DECLARE i INT DEFAULT 1;
@@ -2421,9 +2422,11 @@ DELIMITER ;
 CREATE TABLE `tbl_historial` (
   `Id_Historial` int(11) NOT NULL,
   `Id_Equipo` int(11) DEFAULT NULL,
-  `Ubicacion_Antigua` varchar(255) DEFAULT NULL,
+  `Tipo_Entidad` enum('Equipo','Mantenimiento') NOT NULL DEFAULT 'Equipo',
+  `Campo_Cambiado` varchar(255) DEFAULT NULL,
+  `Valor_Anterior` varchar(255) DEFAULT NULL,
   `Descripcion_Historial` varchar(255) DEFAULT NULL,
-  `Ubicacion_Nueva` varchar(255) DEFAULT NULL,
+  `Valor_Nuevo` varchar(255) DEFAULT NULL,
   `Fecha_Cambio` date DEFAULT NULL,
   `Id_Empleado` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -2433,17 +2436,17 @@ CREATE TABLE `tbl_historial` (
 --
 DELIMITER //
 CREATE TRIGGER `trg_historial_bi` BEFORE INSERT ON `tbl_historial` FOR EACH ROW BEGIN
-    SET NEW.Ubicacion_Antigua   = CapitalizarPalabras(NEW.Ubicacion_Antigua);
+    SET NEW.Valor_Anterior = CapitalizarPalabras(NEW.Valor_Anterior);
     SET NEW.Descripcion_Historial = CapitalizarPalabras(NEW.Descripcion_Historial);
-    SET NEW.Ubicacion_Nueva     = CapitalizarPalabras(NEW.Ubicacion_Nueva);
+    SET NEW.Valor_Nuevo = CapitalizarPalabras(NEW.Valor_Nuevo);
 END
 //
 DELIMITER ;
 DELIMITER //
 CREATE TRIGGER `trg_historial_bu` BEFORE UPDATE ON `tbl_historial` FOR EACH ROW BEGIN
-    SET NEW.Ubicacion_Antigua   = CapitalizarPalabras(NEW.Ubicacion_Antigua);
+    SET NEW.Valor_Anterior = CapitalizarPalabras(NEW.Valor_Anterior);
     SET NEW.Descripcion_Historial = CapitalizarPalabras(NEW.Descripcion_Historial);
-    SET NEW.Ubicacion_Nueva     = CapitalizarPalabras(NEW.Ubicacion_Nueva);
+    SET NEW.Valor_Nuevo = CapitalizarPalabras(NEW.Valor_Nuevo);
 END
 //
 DELIMITER ;
@@ -2768,6 +2771,62 @@ ALTER TABLE `tbl_usuario`
   ADD CONSTRAINT `tbl_usuario_ibfk_1` FOREIGN KEY (`Id_Empleado`) REFERENCES `tbl_empleado` (`Id_Empleado`),
   ADD CONSTRAINT `tbl_usuario_ibfk_2` FOREIGN KEY (`Id_Rol`) REFERENCES `tbl_rol` (`Id_Rol`);
 COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+-- Triggers de auditoría adicionales
+DELIMITER //
+
+-- Triggers para equipos
+CREATE TRIGGER `trg_equipos_auditoria` AFTER UPDATE ON `tbl_equipos` FOR EACH ROW BEGIN
+    IF OLD.Marca_Equipo != NEW.Marca_Equipo THEN
+        INSERT INTO tbl_historial (Id_Equipo, Tipo_Entidad, Campo_Cambiado, Valor_Anterior, Valor_Nuevo, Descripcion_Historial, Fecha_Cambio, Id_Empleado)
+        VALUES (NEW.Id_Equipo, 'Equipo', 'Marca_Equipo', OLD.Marca_Equipo, NEW.Marca_Equipo, CONCAT('Cambio de marca'), CURDATE(), NEW.Propietario_Equipo);
+    END IF;
+    IF OLD.Numero_Serie != NEW.Numero_Serie THEN
+        INSERT INTO tbl_historial (Id_Equipo, Tipo_Entidad, Campo_Cambiado, Valor_Anterior, Valor_Nuevo, Descripcion_Historial, Fecha_Cambio, Id_Empleado)
+        VALUES (NEW.Id_Equipo, 'Equipo', 'Numero_Serie', OLD.Numero_Serie, NEW.Numero_Serie, CONCAT('Cambio de serie'), CURDATE(), NEW.Propietario_Equipo);
+    END IF;
+    IF OLD.Ubicacion_Equipo != NEW.Ubicacion_Equipo THEN
+        INSERT INTO tbl_historial (Id_Equipo, Tipo_Entidad, Campo_Cambiado, Valor_Anterior, Valor_Nuevo, Descripcion_Historial, Fecha_Cambio, Id_Empleado)
+        VALUES (NEW.Id_Equipo, 'Equipo', 'Ubicacion_Equipo', OLD.Ubicacion_Equipo, NEW.Ubicacion_Equipo, CONCAT('Cambio de ubicación'), CURDATE(), NEW.Propietario_Equipo);
+    END IF;
+    IF OLD.Propietario_Equipo != NEW.Propietario_Equipo THEN
+        INSERT INTO tbl_historial (Id_Equipo, Tipo_Entidad, Campo_Cambiado, Valor_Anterior, Valor_Nuevo, Descripcion_Historial, Fecha_Cambio, Id_Empleado)
+        VALUES (NEW.Id_Equipo, 'Equipo', 'Propietario_Equipo', OLD.Propietario_Equipo, NEW.Propietario_Equipo, CONCAT('Cambio de propietario'), CURDATE(), NEW.Propietario_Equipo);
+    END IF;
+    IF OLD.Estado_Equipo != NEW.Estado_Equipo THEN
+        INSERT INTO tbl_historial (Id_Equipo, Tipo_Entidad, Campo_Cambiado, Valor_Anterior, Valor_Nuevo, Descripcion_Historial, Fecha_Cambio, Id_Empleado)
+        VALUES (NEW.Id_Equipo, 'Equipo', 'Estado_Equipo', OLD.Estado_Equipo, NEW.Estado_Equipo, CONCAT('Cambio de estado'), CURDATE(), NEW.Propietario_Equipo);
+    END IF;
+    IF OLD.Id_Tipo_Equipo != NEW.Id_Tipo_Equipo THEN
+        INSERT INTO tbl_historial (Id_Equipo, Tipo_Entidad, Campo_Cambiado, Valor_Anterior, Valor_Nuevo, Descripcion_Historial, Fecha_Cambio, Id_Empleado)
+        VALUES (NEW.Id_Equipo, 'Equipo', 'Id_Tipo_Equipo', OLD.Id_Tipo_Equipo, NEW.Id_Tipo_Equipo, CONCAT('Cambio de tipo'), CURDATE(), NEW.Propietario_Equipo);
+    END IF;
+END//
+
+-- Triggers para mantenimiento
+CREATE TRIGGER `trg_mantenimiento_auditoria_insert` AFTER INSERT ON `tbl_mantenimiento` FOR EACH ROW
+BEGIN
+    INSERT INTO tbl_historial (Id_Equipo, Tipo_Entidad, Campo_Cambiado, Valor_Anterior, Valor_Nuevo, Descripcion_Historial, Fecha_Cambio, Id_Empleado)
+    VALUES (NEW.Id_Equipo, 'Mantenimiento', 'Nuevo_Mantenimiento', NULL, NEW.Id_Mantenimiento, CONCAT('Nuevo mantenimiento: ', NEW.Descripcion_Mantenimiento), NEW.Fecha_Mantenimiento, NEW.Id_Empleado);
+END//
+
+CREATE TRIGGER `trg_mantenimiento_auditoria_update` AFTER UPDATE ON `tbl_mantenimiento` FOR EACH ROW
+BEGIN
+    IF OLD.Descripcion_Mantenimiento != NEW.Descripcion_Mantenimiento THEN
+        INSERT INTO tbl_historial (Id_Equipo, Tipo_Entidad, Campo_Cambiado, Valor_Anterior, Valor_Nuevo, Descripcion_Historial, Fecha_Cambio, Id_Empleado)
+        VALUES (NEW.Id_Equipo, 'Mantenimiento', 'Descripcion_Mantenimiento', OLD.Descripcion_Mantenimiento, NEW.Descripcion_Mantenimiento, CONCAT('Cambio en descripción de mantenimiento'), CURDATE(), NEW.Id_Empleado);
+    END IF;
+    IF OLD.Estado_Mantenimiento != NEW.Estado_Mantenimiento THEN
+        INSERT INTO tbl_historial (Id_Equipo, Tipo_Entidad, Campo_Cambiado, Valor_Anterior, Valor_Nuevo, Descripcion_Historial, Fecha_Cambio, Id_Empleado)
+        VALUES (NEW.Id_Equipo, 'Mantenimiento', 'Estado_Mantenimiento', OLD.Estado_Mantenimiento, NEW.Estado_Mantenimiento, CONCAT('Cambio en estado de mantenimiento'), CURDATE(), NEW.Id_Empleado);
+    END IF;
+END//
+
+DELIMITER ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
