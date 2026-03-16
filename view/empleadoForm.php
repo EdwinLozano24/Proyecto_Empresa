@@ -11,8 +11,8 @@ protegerPagina();
   <title><?php echo !empty($empleado) ? 'Editar Empleado' : 'Nuevo Empleado'; ?></title>
     <?php
     // Usar el CSS estilizado
-    $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/EmpleadoForm.css';
-    $cssUrl = '/inventario_equipos/assets/css/EmpleadoForm.css';
+    $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/EquipoForm.css';
+    $cssUrl = '/inventario_equipos/assets/css/EquipoForm.css';
     if (file_exists($cssPath)) {
         echo '<link rel="stylesheet" href="' . $cssUrl . '">';
     } else {

@@ -11,8 +11,8 @@ protegerPagina();
   <title>Empleados - Inventario</title>
     <?php
     // Usar el CSS estilizado
-    $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/Empleados.css';
-    $cssUrl = '/inventario_equipos/assets/css/Empleados.css';
+    $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/Usuarios.css';
+    $cssUrl = '/inventario_equipos/assets/css/Usuarios.css';
     if (file_exists($cssPath)) {
         echo '<link rel="stylesheet" href="' . $cssUrl . '">';
     } else {
