@@ -312,8 +312,6 @@ FOR EACH ROW
 BEGIN
     SET NEW.Marca_Equipo     = CapitalizarPalabras(NEW.Marca_Equipo);
     SET NEW.Ubicacion_Equipo = CapitalizarPalabras(NEW.Ubicacion_Equipo);
-    SET NEW.Propietario_Equipo = CapitalizarPalabras(NEW.Propietario_Equipo);
-    SET NEW.Codigo_Inventario = UPPER(NEW.Codigo_Inventario);
     SET NEW.Numero_Serie = UPPER(NEW.Numero_Serie);
 END$$
 
@@ -323,8 +321,6 @@ FOR EACH ROW
 BEGIN
     SET NEW.Marca_Equipo     = CapitalizarPalabras(NEW.Marca_Equipo);
     SET NEW.Ubicacion_Equipo = CapitalizarPalabras(NEW.Ubicacion_Equipo);
-    SET NEW.Propietario_Equipo = CapitalizarPalabras(NEW.Propietario_Equipo);
-    SET NEW.Codigo_Inventario = UPPER(NEW.Codigo_Inventario);
     SET NEW.Numero_Serie = UPPER(NEW.Numero_Serie);
 END$$
 DELIMITER ;
@@ -399,8 +395,6 @@ SET Nombre_Rol = CapitalizarPalabras(Nombre_Rol),
 UPDATE tbl_equipos
 SET Marca_Equipo = CapitalizarPalabras(Marca_Equipo),
     Ubicacion_Equipo = CapitalizarPalabras(Ubicacion_Equipo),
-    Propietario_Equipo = CapitalizarPalabras(Propietario_Equipo),
-    Codigo_Inventario = UPPER(Codigo_Inventario),
     Numero_Serie = UPPER(Numero_Serie);
 
 -- Normalizar mantenimiento e historial

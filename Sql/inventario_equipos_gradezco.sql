@@ -2399,8 +2399,6 @@ DELIMITER $$
 CREATE TRIGGER `trg_equipos_bi` BEFORE INSERT ON `tbl_equipos` FOR EACH ROW BEGIN
     SET NEW.Marca_Equipo     = CapitalizarPalabras(NEW.Marca_Equipo);
     SET NEW.Ubicacion_Equipo = CapitalizarPalabras(NEW.Ubicacion_Equipo);
-    SET NEW.Propietario_Equipo = CapitalizarPalabras(NEW.Propietario_Equipo);
-    SET NEW.Codigo_Inventario = UPPER(NEW.Codigo_Inventario);
     SET NEW.Numero_Serie = UPPER(NEW.Numero_Serie);
 END
 $$
@@ -2409,8 +2407,6 @@ DELIMITER $$
 CREATE TRIGGER `trg_equipos_bu` BEFORE UPDATE ON `tbl_equipos` FOR EACH ROW BEGIN
     SET NEW.Marca_Equipo     = CapitalizarPalabras(NEW.Marca_Equipo);
     SET NEW.Ubicacion_Equipo = CapitalizarPalabras(NEW.Ubicacion_Equipo);
-    SET NEW.Propietario_Equipo = CapitalizarPalabras(NEW.Propietario_Equipo);
-    SET NEW.Codigo_Inventario = UPPER(NEW.Codigo_Inventario);
     SET NEW.Numero_Serie = UPPER(NEW.Numero_Serie);
 END
 $$

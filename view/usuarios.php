@@ -37,6 +37,11 @@ if (!isset($usuarios)) {
         echo '<!-- CSS File not found at: ' . $cssPath . ' -->';
     }
     ?>
+    <!-- Choices.js para select buscable -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
 </head>
 <body>
   <main>
@@ -117,7 +122,7 @@ if (!isset($usuarios)) {
       </form>
     </div>
 
-    <table class="table table-striped">
+    <table id="usuariosTable" class="table table-striped">
       <thead>
         <tr>
           <th>ID</th>
@@ -148,25 +153,39 @@ if (!isset($usuarios)) {
     </table>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
   <script>
-    function toggleSearchForm() {
-      const form = document.getElementById('searchForm');
-      const btn = document.querySelector('.btn-toggle-filter');
-      if (form.style.display === 'none') {
-        form.style.display = 'grid';
-        btn.textContent = '↑ Contraer';
-      } else {
-        form.style.display = 'none';
-        btn.textContent = '↓ Expandir';
+    document.addEventListener('DOMContentLoaded', function() {
+      var rolSelect = document.getElementById('rol');
+      if (rolSelect) {
+        new Choices(rolSelect, {
+          searchEnabled: true,
+          shouldSort: false,
+          itemSelectText: '',
+          placeholder: true,
+          placeholderValue: rolSelect.querySelector('option[value=""]')?.textContent || 'Buscar...'
+        });
       }
-    }
+    });
+  </script>
 
-    // Mostrar formulario si hay filtros activos
-    window.addEventListener('DOMContentLoaded', function() {
-      <?php if ($filtros_activos ?? false): ?>
-        document.getElementById('searchForm').style.display = 'grid';
-        document.querySelector('.btn-toggle-filter').textContent = '↑ Contraer';
-      <?php endif; ?>
+  <!-- jQuery + DataTables -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.jQuery && $.fn.dataTable) {
+        $('#usuariosTable').DataTable({
+          pageLength: 25,
+          lengthMenu: [[25, 50, 100], [25, 50, 100]],
+          language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+          },
+          columnDefs: [
+            { orderable: false, targets: -1 } // No ordenar acciones
+          ]
+        });
+      }
     });
   </script>
 </body>

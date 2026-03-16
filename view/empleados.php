@@ -19,6 +19,11 @@ protegerPagina();
         echo '<!-- CSS File not found at: ' . $cssPath . ' -->';
     }
     ?>
+    <!-- Choices.js para select buscable -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
   
 </head>
 <body>
@@ -100,7 +105,7 @@ protegerPagina();
       </form>
     </div>
 
-    <table class="table table-striped">
+    <table id="empleadosTable" class="table table-striped">
       <thead>
         <tr>
           <th>ID</th>
@@ -152,6 +157,42 @@ protegerPagina();
         document.getElementById('searchForm').style.display = 'grid';
         document.querySelector('.btn-toggle-filter').textContent = '↑ Contraer';
       <?php endif; ?>
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var cargoSelect = document.getElementById('cargo');
+      if (cargoSelect) {
+        new Choices(cargoSelect, {
+          searchEnabled: true,
+          shouldSort: false,
+          itemSelectText: '',
+          placeholder: true,
+          placeholderValue: cargoSelect.querySelector('option[value=""]')?.textContent || 'Buscar...'
+        });
+      }
+    });
+  </script>
+
+  <!-- jQuery + DataTables -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.jQuery && $.fn.dataTable) {
+        $('#empleadosTable').DataTable({
+          pageLength: 25,
+          lengthMenu: [[25, 50, 100], [25, 50, 100]],
+          language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+          },
+          columnDefs: [
+            { orderable: false, targets: -1 } // No ordenar acciones
+          ]
+        });
+      }
     });
   </script>
 
