@@ -32,9 +32,6 @@ protegerPagina();
         <input type="hidden" name="Id_Equipo" value="<?php echo htmlspecialchars($equipo['Id_Equipo']); ?>">
       <?php endif; ?>
 
-      <label for="Codigo_Inventario">Código de Inventario *</label>
-      <input type="text" id="Codigo_Inventario" name="Codigo_Inventario" required value="<?php echo htmlspecialchars($equipo['Codigo_Inventario'] ?? ''); ?>">
-
       <label for="Marca_Equipo">Marca *</label>
       <input type="text" id="Marca_Equipo" name="Marca_Equipo" required value="<?php echo htmlspecialchars($equipo['Marca_Equipo'] ?? ''); ?>">
 

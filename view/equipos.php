@@ -62,11 +62,6 @@ if (!isset($equipos)) $equipos = [];
         <input type="hidden" name="accion" value="listar">
         <input type="hidden" name="filtrar" value="1">
         
-        <div class="filter-grid">
-          <div class="filter-group">
-            <label for="codigo">Código Inventario</label>
-            <input type="text" id="codigo" name="codigo" placeholder="Ej: INV-001" value="<?php echo htmlspecialchars($filtros['codigo'] ?? ''); ?>">
-          </div>
 
           <div class="filter-group">
             <label for="marca">Marca</label>
@@ -178,7 +173,6 @@ if (!isset($equipos)) $equipos = [];
       <thead>
         <tr>
           <th>ID</th>
-          <th>Código Inventario</th>
           <th>Marca</th>
           <th>Número de Serie</th>
           <th>Ubicación</th>
@@ -194,7 +188,6 @@ if (!isset($equipos)) $equipos = [];
           <?php foreach ($equipos as $equipo): ?>
             <tr>
               <td><?php echo htmlspecialchars($equipo['Id_Equipo']); ?></td>
-              <td><?php echo htmlspecialchars($equipo['Codigo_Inventario'] ?? 'N/A'); ?></td>
               <td><?php echo htmlspecialchars($equipo['Marca_Equipo'] ?? 'N/A'); ?></td>
               <td><?php echo htmlspecialchars($equipo['Numero_Serie'] ?? 'N/A'); ?></td>
               <td><?php echo htmlspecialchars($equipo['Ubicacion_Equipo'] ?? 'N/A'); ?></td>

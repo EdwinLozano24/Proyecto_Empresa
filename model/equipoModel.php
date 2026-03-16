@@ -13,7 +13,6 @@ class EquipoModel {
     public function obtenerTodos() {
         $sql = "SELECT 
                     e.Id_Equipo,
-                    e.Codigo_Inventario,
                     e.Marca_Equipo,
                     e.Numero_Serie,
                     e.Ubicacion_Equipo,
@@ -38,7 +37,6 @@ class EquipoModel {
     public function obtenerPorId($id) {
         $sql = "SELECT 
                     e.Id_Equipo,
-                    e.Codigo_Inventario,
                     e.Marca_Equipo,
                     e.Numero_Serie,
                     e.Ubicacion_Equipo,
@@ -83,7 +81,6 @@ class EquipoModel {
      */
     public function crear($datos) {
         $sql = "INSERT INTO tbl_equipos (
-                    Codigo_Inventario,
                     Marca_Equipo,
                     Numero_Serie,
                     Ubicacion_Equipo,
@@ -99,7 +96,6 @@ class EquipoModel {
         $tipoEquipo = !empty($datos['Id_Tipo_Equipo']) ? $datos['Id_Tipo_Equipo'] : NULL;
         
         return $stmt->execute([
-            $datos['Codigo_Inventario'],
             $datos['Marca_Equipo'],
             $datos['Numero_Serie'],
             $datos['Ubicacion_Equipo'],
@@ -115,7 +111,6 @@ class EquipoModel {
      */
     public function actualizar($id, $datos) {
         $sql = "UPDATE tbl_equipos SET
-                    Codigo_Inventario = ?,
                     Marca_Equipo = ?,
                     Numero_Serie = ?,
                     Ubicacion_Equipo = ?,
@@ -131,7 +126,6 @@ class EquipoModel {
         $tipoEquipo = !empty($datos['Id_Tipo_Equipo']) ? $datos['Id_Tipo_Equipo'] : NULL;
         
         return $stmt->execute([
-            $datos['Codigo_Inventario'],
             $datos['Marca_Equipo'],
             $datos['Numero_Serie'],
             $datos['Ubicacion_Equipo'],
@@ -179,7 +173,6 @@ class EquipoModel {
     public function obtenerPorEstado($estado) {
         $sql = "SELECT 
                     e.Id_Equipo,
-                    e.Codigo_Inventario,
                     e.Marca_Equipo,
                     e.Numero_Serie,
                     e.Ubicacion_Equipo,
@@ -206,7 +199,6 @@ class EquipoModel {
     public function buscar($filtros) {
         $sql = "SELECT 
                     e.Id_Equipo,
-                    e.Codigo_Inventario,
                     e.Marca_Equipo,
                     e.Numero_Serie,
                     e.Ubicacion_Equipo,
@@ -222,11 +214,7 @@ class EquipoModel {
                 WHERE 1=1";
         
         $parametros = [];
-        
-        if (!empty($filtros['codigo'])) {
-            $sql .= " AND e.Codigo_Inventario LIKE ?";
-            $parametros[] = '%' . $filtros['codigo'] . '%';
-        }
+    
         
         if (!empty($filtros['marca'])) {
             $sql .= " AND e.Marca_Equipo LIKE ?";

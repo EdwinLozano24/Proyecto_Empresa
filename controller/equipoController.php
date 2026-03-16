@@ -30,7 +30,6 @@ $filtros = [];
 // Procesar filtros desde GET o POST
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['filtrar'])) {
     $filtros = [
-        'codigo' => $_GET['codigo'] ?? '',
         'marca' => $_GET['marca'] ?? '',
         'serie' => $_GET['serie'] ?? '',
         'ubicacion' => $_GET['ubicacion'] ?? '',
@@ -49,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($origen == 'crear' || $origen == 'editar') {
         $datos = [
-            'Codigo_Inventario' => $_POST['Codigo_Inventario'] ?? '',
             'Marca_Equipo' => $_POST['Marca_Equipo'] ?? '',
             'Numero_Serie' => $_POST['Numero_Serie'] ?? '',
             'Ubicacion_Equipo' => $_POST['Ubicacion_Equipo'] ?? '',
