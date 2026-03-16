@@ -21,18 +21,18 @@ SET time_zone = "+00:00";
 -- Database: `inventario_equipos_gradezco`
 --
 
-DELIMITER $$
+DELIMITER //
 --
 -- Functions
 --
-CREATE DEFINER=`root`@`localhost` FUNCTION `Capitalizar` (`txt` VARCHAR(255)) RETURNS VARCHAR(255) CHARSET utf8mb4 COLLATE utf8mb4_general_ci DETERMINISTIC BEGIN
+CREATE FUNCTION `Capitalizar` (`txt` VARCHAR(255)) RETURNS VARCHAR(255) CHARSET utf8mb4 COLLATE utf8mb4_general_ci DETERMINISTIC BEGIN
     IF txt IS NULL OR txt = '' THEN
         RETURN txt;
     END IF;
     RETURN CONCAT( UPPER(LEFT(LOWER(txt),1)), SUBSTRING(LOWER(txt),2) );
-END$$
+END//
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `CapitalizarPalabras` (`txt` VARCHAR(255)) RETURNS VARCHAR(255) CHARSET utf8mb4 COLLATE utf8mb4_general_ci DETERMINISTIC BEGIN
+CREATE FUNCTION `CapitalizarPalabras` (`txt` VARCHAR(255)) RETURNS VARCHAR(255) CHARSET utf8mb4 COLLATE utf8mb4_general_ci DETERMINISTIC BEGIN
     DECLARE resultado VARCHAR(255) DEFAULT '';
     DECLARE palabra VARCHAR(255);
     DECLARE espacio_pos INT DEFAULT 1;
@@ -70,7 +70,7 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `CapitalizarPalabras` (`txt` VARCHAR(
     END WHILE;
 
     RETURN resultado;
-END$$
+END//
 
 DELIMITER ;
 
@@ -89,19 +89,19 @@ CREATE TABLE `tbl_archivo` (
 --
 -- Triggers `tbl_archivo`
 --
-DELIMITER $$
+DELIMITER //
 CREATE TRIGGER `trg_archivo_bi` BEFORE INSERT ON `tbl_archivo` FOR EACH ROW BEGIN
     SET NEW.Nombre_Archivo = CapitalizarPalabras(NEW.Nombre_Archivo);
     SET NEW.Ruta_Archivo = LOWER(NEW.Ruta_Archivo);
 END
-$$
+//
 DELIMITER ;
-DELIMITER $$
+DELIMITER //
 CREATE TRIGGER `trg_archivo_bu` BEFORE UPDATE ON `tbl_archivo` FOR EACH ROW BEGIN
     SET NEW.Nombre_Archivo = CapitalizarPalabras(NEW.Nombre_Archivo);
     SET NEW.Ruta_Archivo = LOWER(NEW.Ruta_Archivo);
 END
-$$
+//
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -129,19 +129,19 @@ INSERT INTO `tbl_cargo` (`Id_Cargo`, `Nombre_Cargo`, `Descripcion_Cargo`) VALUES
 --
 -- Triggers `tbl_cargo`
 --
-DELIMITER $$
+DELIMITER //
 CREATE TRIGGER `trg_cargo_bi` BEFORE INSERT ON `tbl_cargo` FOR EACH ROW BEGIN
     SET NEW.Nombre_Cargo = CapitalizarPalabras(NEW.Nombre_Cargo);
     SET NEW.Descripcion_Cargo = CapitalizarPalabras(NEW.Descripcion_Cargo);
 END
-$$
+//
 DELIMITER ;
-DELIMITER $$
+DELIMITER //
 CREATE TRIGGER `trg_cargo_bu` BEFORE UPDATE ON `tbl_cargo` FOR EACH ROW BEGIN
     SET NEW.Nombre_Cargo = CapitalizarPalabras(NEW.Nombre_Cargo);
     SET NEW.Descripcion_Cargo = CapitalizarPalabras(NEW.Descripcion_Cargo);
 END
-$$
+//
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -932,30 +932,30 @@ INSERT INTO `tbl_empleado` (`Id_Empleado`, `documento_Empleado`, `Nombre_Emplead
 --
 -- Triggers `tbl_empleado`
 --
-DELIMITER $$
+DELIMITER //
 CREATE TRIGGER `trg_empleado_bi` BEFORE INSERT ON `tbl_empleado` FOR EACH ROW BEGIN
     SET NEW.Nombre_Empleado   = CapitalizarPalabras(NEW.Nombre_Empleado);
     SET NEW.Apellido_Empleado = CapitalizarPalabras(NEW.Apellido_Empleado);
     SET NEW.Correo_Electronico = LOWER(NEW.Correo_Electronico);
 END
-$$
+//
 DELIMITER ;
-DELIMITER $$
+DELIMITER //
 CREATE TRIGGER `trg_empleado_bu` BEFORE UPDATE ON `tbl_empleado` FOR EACH ROW BEGIN
     SET NEW.Nombre_Empleado   = CapitalizarPalabras(NEW.Nombre_Empleado);
     SET NEW.Apellido_Empleado = CapitalizarPalabras(NEW.Apellido_Empleado);
     SET NEW.Correo_Electronico = LOWER(NEW.Correo_Electronico);
 END
-$$
+//
 DELIMITER ;
-DELIMITER $$
+DELIMITER //
 CREATE TRIGGER `trg_empleado_link_usuario` AFTER INSERT ON `tbl_empleado` FOR EACH ROW BEGIN
     -- Enlazar el usuario con el empleado si coincide el documento
     UPDATE tbl_usuario
     SET Id_Empleado = NEW.Id_Empleado
     WHERE documento_Usuario = NEW.documento_Empleado;
 END
-$$
+//
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -2395,21 +2395,21 @@ INSERT INTO `tbl_equipos` (`Id_Equipo`, `Codigo_Inventario`, `Marca_Equipo`, `Nu
 --
 -- Triggers `tbl_equipos`
 --
-DELIMITER $$
+DELIMITER //
 CREATE TRIGGER `trg_equipos_bi` BEFORE INSERT ON `tbl_equipos` FOR EACH ROW BEGIN
     SET NEW.Marca_Equipo     = CapitalizarPalabras(NEW.Marca_Equipo);
     SET NEW.Ubicacion_Equipo = CapitalizarPalabras(NEW.Ubicacion_Equipo);
     SET NEW.Numero_Serie = UPPER(NEW.Numero_Serie);
 END
-$$
+//
 DELIMITER ;
-DELIMITER $$
+DELIMITER //
 CREATE TRIGGER `trg_equipos_bu` BEFORE UPDATE ON `tbl_equipos` FOR EACH ROW BEGIN
     SET NEW.Marca_Equipo     = CapitalizarPalabras(NEW.Marca_Equipo);
     SET NEW.Ubicacion_Equipo = CapitalizarPalabras(NEW.Ubicacion_Equipo);
     SET NEW.Numero_Serie = UPPER(NEW.Numero_Serie);
 END
-$$
+//
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -2431,21 +2431,21 @@ CREATE TABLE `tbl_historial` (
 --
 -- Triggers `tbl_historial`
 --
-DELIMITER $$
+DELIMITER //
 CREATE TRIGGER `trg_historial_bi` BEFORE INSERT ON `tbl_historial` FOR EACH ROW BEGIN
     SET NEW.Ubicacion_Antigua   = CapitalizarPalabras(NEW.Ubicacion_Antigua);
     SET NEW.Descripcion_Historial = CapitalizarPalabras(NEW.Descripcion_Historial);
     SET NEW.Ubicacion_Nueva     = CapitalizarPalabras(NEW.Ubicacion_Nueva);
 END
-$$
+//
 DELIMITER ;
-DELIMITER $$
+DELIMITER //
 CREATE TRIGGER `trg_historial_bu` BEFORE UPDATE ON `tbl_historial` FOR EACH ROW BEGIN
     SET NEW.Ubicacion_Antigua   = CapitalizarPalabras(NEW.Ubicacion_Antigua);
     SET NEW.Descripcion_Historial = CapitalizarPalabras(NEW.Descripcion_Historial);
     SET NEW.Ubicacion_Nueva     = CapitalizarPalabras(NEW.Ubicacion_Nueva);
 END
-$$
+//
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -2466,17 +2466,17 @@ CREATE TABLE `tbl_mantenimiento` (
 --
 -- Triggers `tbl_mantenimiento`
 --
-DELIMITER $$
+DELIMITER //
 CREATE TRIGGER `trg_mantenimiento_bi` BEFORE INSERT ON `tbl_mantenimiento` FOR EACH ROW BEGIN
     SET NEW.Descripcion_Mantenimiento = CapitalizarPalabras(NEW.Descripcion_Mantenimiento);
 END
-$$
+//
 DELIMITER ;
-DELIMITER $$
+DELIMITER //
 CREATE TRIGGER `trg_mantenimiento_bu` BEFORE UPDATE ON `tbl_mantenimiento` FOR EACH ROW BEGIN
     SET NEW.Descripcion_Mantenimiento = CapitalizarPalabras(NEW.Descripcion_Mantenimiento);
 END
-$$
+//
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -2504,19 +2504,19 @@ INSERT INTO `tbl_rol` (`Id_Rol`, `Nombre_Rol`, `Descripcion_Rol`) VALUES
 --
 -- Triggers `tbl_rol`
 --
-DELIMITER $$
+DELIMITER //
 CREATE TRIGGER `trg_rol_bi` BEFORE INSERT ON `tbl_rol` FOR EACH ROW BEGIN
     SET NEW.Nombre_Rol = CapitalizarPalabras(NEW.Nombre_Rol);
     SET NEW.Descripcion_Rol = CapitalizarPalabras(NEW.Descripcion_Rol);
 END
-$$
+//
 DELIMITER ;
-DELIMITER $$
+DELIMITER //
 CREATE TRIGGER `trg_rol_bu` BEFORE UPDATE ON `tbl_rol` FOR EACH ROW BEGIN
     SET NEW.Nombre_Rol = CapitalizarPalabras(NEW.Nombre_Rol);
     SET NEW.Descripcion_Rol = CapitalizarPalabras(NEW.Descripcion_Rol);
 END
-$$
+//
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -2547,19 +2547,19 @@ INSERT INTO `tbl_tipo_equipo` (`Id_Tipo_Equipo`, `Nombre_Tipo_Equipo`, `Descripc
 --
 -- Triggers `tbl_tipo_equipo`
 --
-DELIMITER $$
+DELIMITER //
 CREATE TRIGGER `trg_tipo_equipo_bi` BEFORE INSERT ON `tbl_tipo_equipo` FOR EACH ROW BEGIN
     SET NEW.Nombre_Tipo_Equipo = CapitalizarPalabras(NEW.Nombre_Tipo_Equipo);
     SET NEW.Descripcion_Tipo_Equipo = CapitalizarPalabras(NEW.Descripcion_Tipo_Equipo);
 END
-$$
+//
 DELIMITER ;
-DELIMITER $$
+DELIMITER //
 CREATE TRIGGER `trg_tipo_equipo_bu` BEFORE UPDATE ON `tbl_tipo_equipo` FOR EACH ROW BEGIN
     SET NEW.Nombre_Tipo_Equipo = CapitalizarPalabras(NEW.Nombre_Tipo_Equipo);
     SET NEW.Descripcion_Tipo_Equipo = CapitalizarPalabras(NEW.Descripcion_Tipo_Equipo);
 END
-$$
+//
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -2582,7 +2582,7 @@ CREATE TABLE `tbl_usuario` (
 --
 -- Triggers `tbl_usuario`
 --
-DELIMITER $$
+DELIMITER //
 CREATE TRIGGER `trg_usuario_set_empleado` BEFORE INSERT ON `tbl_usuario` FOR EACH ROW BEGIN
     DECLARE v_id_empleado INT;
 
@@ -2595,7 +2595,7 @@ CREATE TRIGGER `trg_usuario_set_empleado` BEFORE INSERT ON `tbl_usuario` FOR EAC
     -- Si existe, asignar el Id_Empleado al usuario
     SET NEW.Id_Empleado = v_id_empleado;
 END
-$$
+//
 DELIMITER ;
 
 --
@@ -2772,3 +2772,6 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+
