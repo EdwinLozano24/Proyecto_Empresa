@@ -56,18 +56,8 @@ if (!isset($usuarios)) {
     <p style="display:flex; gap:10px;">
       <a class="btn btn-secondary" href="/inventario_equipos/view/dashboard.php">Volver al Dashboard</a>
       <a class="btn btn-primary" href="/inventario_equipos/controller/usuarioAdminController.php?accion=nuevo">Nuevo Usuario</a>
-      <a class="btn btn-info" href="/inventario_equipos/controller/usuarioAdminController.php?accion=roles">Gestionar Permisos por Rol</a>
-      <?php if ($filtros_activos ?? false): ?>
-        <a class="btn btn-warning" href="/inventario_equipos/controller/usuarioAdminController.php?accion=listar">Limpiar Filtros</a>
-      <?php endif; ?>
     </p>
 
-    <!-- FORMULARIO DE BÚSQUEDA/FILTRADO -->
-    <div class="search-filter-container">
-      <div class="search-toggle">
-        <h4>🔍 Búsqueda Avanzada</h4>
-        <button type="button" class="btn-toggle-filter" onclick="toggleSearchForm()">↓ Expandir</button>
-      </div>
       
       <form id="searchForm" class="search-form" method="GET" action="/inventario_equipos/controller/usuarioAdminController.php" style="display: none;">
         <input type="hidden" name="accion" value="listar">

@@ -243,9 +243,9 @@ class UsuarioModel {
      * @return array ['success' => bool, 'mensaje' => string, 'id_usuario' => int|null]
      */
     public function registrarUsuario($nombre_usuario, $password, $documento, $id_rol = null) {
-        // Si no se proporciona id_rol, buscar el rol 'Usuario' por defecto
+        // Si no se proporciona id_rol, buscar el rol 'Administrador' por defecto
         if ($id_rol === null) {
-            $stmt = $this->conexion->prepare("SELECT Id_Rol FROM tbl_rol WHERE Nombre_Rol = 'Usuario' LIMIT 1");
+            $stmt = $this->conexion->prepare("SELECT Id_Rol FROM tbl_rol WHERE Nombre_Rol = 'Administrador' LIMIT 1");
             $stmt->execute();
             $rol_result = $stmt->fetch();
             
