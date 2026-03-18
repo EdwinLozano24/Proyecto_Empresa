@@ -107,15 +107,7 @@
           <h1>Gradezco</h1>
           <p>Sistema de Inventario de Equipos</p>
         </div>
-        
-        <div class="search-container">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
-          </svg>
-          <input type="text" placeholder="Buscar equipo, código...">
-        </div>
-      </div>
+      
       
       <!-- Usuario autenticado -->
       <div class="user-info" style="display: flex; align-items: center; gap: 15px;">
