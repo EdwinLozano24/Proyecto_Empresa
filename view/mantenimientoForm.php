@@ -16,8 +16,8 @@ if (!isset($equipos)) $equipos = [];
   <title>Registrar Mantenimiento - Inventario</title>
     <?php
     // Usar el CSS estilizado
-    $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/Equipos.css';
-    $cssUrl = '/inventario_equipos/assets/css/Equipos.css';
+    $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/Equipoform.css';
+    $cssUrl = '/inventario_equipos/assets/css/Equipoform.css';
     if (file_exists($cssPath)) {
         echo '<link rel="stylesheet" href="' . $cssUrl . '">';
     } else {
@@ -38,14 +38,19 @@ if (!isset($equipos)) $equipos = [];
     <form method="POST" action="">
       <div class="form-group">
         <label for="id_equipo">Equipo:</label>
-        <select name="id_equipo" id="id_equipo" required>
-          <option value="">Seleccione un equipo</option>
+        <select name="id_equipo" id="id_equipo" required <?php echo (count($equipos) === 1) ? 'disabled' : ''; ?>>
+          <?php if (count($equipos) > 1): ?>
+            <option value="">Seleccione un equipo</option>
+          <?php endif; ?>
           <?php foreach ($equipos as $equipo): ?>
-            <option value="<?php echo htmlspecialchars($equipo['Id_Equipo']); ?>">
+            <option value="<?php echo htmlspecialchars($equipo['Id_Equipo']); ?>" <?php echo (count($equipos) === 1) ? 'selected' : ''; ?>>
               <?php echo htmlspecialchars($equipo['Marca_Equipo'] . ' - ' . $equipo['Numero_Serie'] . ' (' . $equipo['Ubicacion_Equipo'] . ')'); ?>
             </option>
           <?php endforeach; ?>
         </select>
+        <?php if (count($equipos) === 1): ?>
+          <input type="hidden" name="id_equipo" value="<?php echo htmlspecialchars($equipos[0]['Id_Equipo']); ?>">
+        <?php endif; ?>
       </div>
 
       <div class="form-group">

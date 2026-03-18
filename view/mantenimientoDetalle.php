@@ -17,8 +17,8 @@ if (!isset($equipo)) $equipo = null;
   <title>Historial de Mantenimientos - Inventario</title>
     <?php
     // Usar el CSS estilizado
-    $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/Equipos.css';
-    $cssUrl = '/inventario_equipos/assets/css/Equipos.css';
+    $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/Equipoform.css';
+    $cssUrl = '/inventario_equipos/assets/css/Equipoform.css';
     if (file_exists($cssPath)) {
         echo '<link rel="stylesheet" href="' . $cssUrl . '">';
     } else {
@@ -44,7 +44,7 @@ if (!isset($equipo)) $equipo = null;
 
     <p style="display:flex; gap:10px; align-items:center;">
       <a class="btn btn-secondary" href="/inventario_equipos/controller/mantenimientoController.php?accion=listar">Volver a Mantenimientos</a>
-      <a class="btn btn-success" href="/inventario_equipos/controller/mantenimientoController.php?accion=agregar">Registrar Nuevo Mantenimiento</a>
+      <a class="btn btn-success" href="/inventario_equipos/controller/mantenimientoController.php?accion=agregar&id_equipo=<?php echo $equipo['Id_Equipo']; ?>">Registrar Nuevo Mantenimiento</a>
     </p>
 
     <?php if (empty($mantenimientos)): ?>
@@ -65,7 +65,7 @@ if (!isset($equipo)) $equipo = null;
             <tr>
               <td><?php echo htmlspecialchars($mantenimiento['Id_Mantenimiento']); ?></td>
               <td><?php echo htmlspecialchars($mantenimiento['Fecha_Mantenimiento']); ?></td>
-              <td><?php echo htmlspecialchars($mantenimiento['Nombre_Empleado'] . ' ' . $mantenimiento['Apellido_Empleado']); ?></td>
+              <td><?php echo htmlspecialchars(($mantenimiento['Nombre_Empleado'] ?? 'Sistema') . ' ' . ($mantenimiento['Apellido_Empleado'] ?? '')); ?></td>
               <td><?php echo htmlspecialchars($mantenimiento['Descripcion_Mantenimiento']); ?></td>
               <td>
                 <span class="badge estado-<?php echo strtolower(str_replace(' ', '-', $mantenimiento['Estado_Mantenimiento'])); ?>">

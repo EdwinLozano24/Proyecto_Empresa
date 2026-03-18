@@ -13,14 +13,14 @@ class MantenimientoModel {
     }
 
     public function obtenerPorEquipo($idEquipo) {
-        $sql = "SELECT m.*, e.Nombre_Empleado, e.Apellido_Empleado FROM tbl_mantenimiento m JOIN tbl_empleado e ON m.Id_Empleado = e.Id_Empleado WHERE m.Id_Equipo = ? ORDER BY m.Fecha_Mantenimiento DESC";
+        $sql = "SELECT m.*, e.Nombre_Empleado, e.Apellido_Empleado FROM tbl_mantenimiento m LEFT JOIN tbl_empleado e ON m.Id_Empleado = e.Id_Empleado WHERE m.Id_Equipo = ? ORDER BY m.Fecha_Mantenimiento DESC";
         $stmt = $this->conexion->prepare($sql);
         $stmt->execute([$idEquipo]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function obtenerTodos() {
-        $sql = "SELECT m.*, eq.Marca_Equipo, eq.Numero_Serie, e.Nombre_Empleado, e.Apellido_Empleado FROM tbl_mantenimiento m JOIN tbl_equipos eq ON m.Id_Equipo = eq.Id_Equipo JOIN tbl_empleado e ON m.Id_Empleado = e.Id_Empleado ORDER BY m.Fecha_Mantenimiento DESC";
+        $sql = "SELECT m.*, eq.Marca_Equipo, eq.Numero_Serie, e.Nombre_Empleado, e.Apellido_Empleado FROM tbl_mantenimiento m JOIN tbl_equipos eq ON m.Id_Equipo = eq.Id_Equipo LEFT JOIN tbl_empleado e ON m.Id_Empleado = e.Id_Empleado ORDER BY m.Fecha_Mantenimiento DESC";
         $stmt = $this->conexion->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

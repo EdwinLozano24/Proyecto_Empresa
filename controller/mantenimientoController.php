@@ -31,6 +31,7 @@ if ($accion === 'listar') {
     // Mostrar únicamente equipos con estado "Mantenimiento"
     $equipos = $equipoModel->obtenerPorEstado('Mantenimiento');
 } elseif ($accion === 'agregar') {
+    $idEquipoPreseleccionado = $_GET['id_equipo'] ?? null;
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $idEquipo = $_POST['id_equipo'] ?? '';
         $procedimiento = $_POST['procedimiento'] ?? '';
@@ -40,12 +41,17 @@ if ($accion === 'listar') {
             $mensaje = 'Todos los campos son obligatorios.';
             $tipo_mensaje = 'danger';
         } else {
-            $idEmpleado = $_SESSION['Id_Empleado'] ?? null;
+            $idEmpleado = $_SESSION['usuario_empleado_id'] ?? null;
             $fecha = date('Y-m-d');
             if ($mantenimientoModel->insertar($idEquipo, $idEmpleado, $fecha, $procedimiento, $estado)) {
                 $mensaje = 'Mantenimiento registrado exitosamente.';
                 $tipo_mensaje = 'success';
-                header('Location: ' . $_SERVER['PHP_SELF'] . '?accion=listar&mensaje=' . urlencode($mensaje) . '&tipo_mensaje=' . $tipo_mensaje);
+                // Si vino desde un equipo específico, redirigir al detalle de ese equipo
+                if ($idEquipoPreseleccionado) {
+                    header('Location: ' . $_SERVER['PHP_SELF'] . '?accion=ver&id_equipo=' . $idEquipo . '&mensaje=' . urlencode($mensaje) . '&tipo_mensaje=' . $tipo_mensaje);
+                } else {
+                    header('Location: ' . $_SERVER['PHP_SELF'] . '?accion=listar&mensaje=' . urlencode($mensaje) . '&tipo_mensaje=' . $tipo_mensaje);
+                }
                 exit;
             } else {
                 $mensaje = 'Error al registrar el mantenimiento.';
@@ -54,7 +60,12 @@ if ($accion === 'listar') {
         }
     }
     // Obtener equipos para el select
-    $equipos = $equipoModel->obtenerTodos();
+    if ($idEquipoPreseleccionado) {
+        // Si hay un equipo preseleccionado, obtener solo ese
+        $equipos = [$equipoModel->obtenerPorId($idEquipoPreseleccionado)];
+    } else {
+        $equipos = $equipoModel->obtenerTodos();
+    }
     include __DIR__ . '/../view/mantenimientoForm.php';
     exit;
 } elseif ($accion === 'ver') {
