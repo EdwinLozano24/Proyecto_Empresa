@@ -9,7 +9,7 @@ $usuario = UsuarioController::obtenerUsuarioActual();
 // Variables para el header
 $pageTitle = 'Equipos';
 $activeTab = 'Equipos';
-$cssUrl = '/inventario_equipos/assets/css/Equipos.css';
+$cssUrl = '/inventario_equipos/assets/css/Usuarios.css';
 
 // Incluir el header común
 require_once 'header.php';

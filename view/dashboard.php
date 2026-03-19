@@ -175,8 +175,7 @@
         <div class="feature-buttons">
           <a href="/inventario_equipos/view/equipoForm.php" class="btn btn-primary" style="text-decoration: none;">Nuevo Equipo</a>
           <a href="/inventario_equipos/controller/historialController.php?accion=listar" class="btn btn-secondary" style="text-decoration: none;">Ver Reportes</a>
-          <a href="/inventario_equipos/controller/usuarioAdminController.php?accion=listar" class="btn btn-outline" style="margin-left:8px; text-decoration:none; display:inline-block; padding:8px 12px; border-radius:4px; border:1px solid #ccc; color:inherit;">Usuarios</a>
-        </div>
+          </div>
       </div>
 
       <div class="maintenance-card">

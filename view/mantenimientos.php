@@ -9,7 +9,7 @@ $usuario = UsuarioController::obtenerUsuarioActual();
 // Variables para el header
 $pageTitle = 'Mantenimientos';
 $activeTab = 'Mantenimiento';
-$cssUrl = '/inventario_equipos/assets/css/Equipos.css';
+$cssUrl = '/inventario_equipos/assets/css/Usuarios.css';
 
 // Incluir el header común
 require_once 'header.php';
@@ -38,7 +38,7 @@ if (!isset($equipos)) $equipos = [];
     <p style="display:flex; gap:10px; align-items:center;">
       <a class="btn btn-secondary" href="/inventario_equipos/view/dashboard.php">Volver al Dashboard</a>
       <a class="btn btn-primary" href="/inventario_equipos/controller/equipoController.php?accion=listar">Ver todos los equipos</a>
-      <a class="btn btn-success" href="/inventario_equipos/controller/mantenimientoController.php?accion=agregar">Registrar Mantenimiento</a>
+      <a class="btn btn-primary" href="/inventario_equipos/controller/mantenimientoController.php?accion=agregar">Registrar Mantenimiento</a>
     </p>
 
     <?php if (empty($equipos)): ?>

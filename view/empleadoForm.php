@@ -71,7 +71,7 @@ protegerPagina();
         <button type="submit" name="crearEmpleado">Crear Empleado</button>
       <?php endif; ?>
 
-      <a href="/inventario_equipos/controller/empleadoController.php?accion=listar">Volver</a>
+      <a href="/inventario_equipos/controller/empleadoController.php?accion=listar"class="btn btn-secondary">Volver</a>
     </form>
   </main>
 </body>
