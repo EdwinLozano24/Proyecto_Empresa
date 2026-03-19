@@ -2,31 +2,25 @@
 if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/../app/protecciones.php';
 protegerPagina();
-?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Empleados - Inventario</title>
-    <?php
-    // Usar el CSS estilizado
-    $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/Usuarios.css';
-    $cssUrl = '/inventario_equipos/assets/css/Usuarios.css';
-    if (file_exists($cssPath)) {
-        echo '<link rel="stylesheet" href="' . $cssUrl . '">';
-    } else {
-        echo '<!-- CSS File not found at: ' . $cssPath . ' -->';
-    }
-    ?>
-    <!-- Choices.js para select buscable -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 
-    <!-- DataTables -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
-  
-</head>
-<body>
+// Obtener datos del usuario actual
+$usuario = UsuarioController::obtenerUsuarioActual();
+
+// Variables para el header
+$pageTitle = 'Empleados';
+$activeTab = 'Empleados';
+$cssUrl = '/inventario_equipos/assets/css/Usuarios.css'; // Cambiar a Empleados.css si existe, sino Usuarios.css
+
+// Incluir el header común
+require_once 'header.php';
+
+// Enlaces CSS adicionales para empleados
+?>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<?php
+?>
+
   <main>
     <h2>Empleados</h2>
 

@@ -3,30 +3,28 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/../app/protecciones.php';
 protegerPagina();
 
+// Obtener datos del usuario actual
+$usuario = UsuarioController::obtenerUsuarioActual();
+
+// Variables para el header
+$pageTitle = 'Historial de Cambios';
+$activeTab = 'Historial';
+$cssUrl = '/inventario_equipos/assets/css/Usuarios.css';// Usa Equipos.css
+
+// Incluir el header común
+require_once 'header.php';
+
+// Enlaces CSS adicionales para historial
+?>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<?php
+
 // Inicializar variables
 if (!isset($mensaje)) $mensaje = '';
 if (!isset($tipo_mensaje)) $tipo_mensaje = 'info';
 if (!isset($historial)) $historial = [];
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Historial de Cambios - Inventario</title>
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
-    <?php
-    // Usar el CSS estilizado
-    $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/Equipos.css';
-    $cssUrl = '/inventario_equipos/assets/css/Equipos.css';
-    if (file_exists($cssPath)) {
-        echo '<link rel="stylesheet" href="' . $cssUrl . '">';
-    } else {
-        echo '<!-- CSS File not found at: ' . $cssPath . ' -->';
-    }
-    ?>
-</head>
-<body>
+
   <main>
     <h2>Historial de Cambios</h2>
 

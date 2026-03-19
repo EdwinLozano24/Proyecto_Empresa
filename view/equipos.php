@@ -3,6 +3,23 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/../app/protecciones.php';
 protegerPagina();
 
+// Obtener datos del usuario actual
+$usuario = UsuarioController::obtenerUsuarioActual();
+
+// Variables para el header
+$pageTitle = 'Equipos';
+$activeTab = 'Equipos';
+$cssUrl = '/inventario_equipos/assets/css/Equipos.css';
+
+// Incluir el header común
+require_once 'header.php';
+
+// Enlaces CSS adicionales para equipos
+?>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<?php
+
 // Inicializar variables esperadas por la vista para evitar warnings
 if (!isset($mensaje)) $mensaje = '';
 if (!isset($tipo_mensaje)) $tipo_mensaje = 'info';
@@ -12,30 +29,7 @@ if (!isset($tiposEquipo)) $tiposEquipo = [];
 if (!isset($empleados)) $empleados = [];
 if (!isset($equipos)) $equipos = [];
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Equipos - Inventario</title>
-    <?php
-    // Usar el CSS estilizado
-    $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/Equipos.css';
-    $cssUrl = '/inventario_equipos/assets/css/Equipos.css';
-    if (file_exists($cssPath)) {
-        echo '<link rel="stylesheet" href="' . $cssUrl . '">';
-    } else {
-        echo '<!-- CSS File not found at: ' . $cssPath . ' -->';
-    }
-    ?>
-    <!-- Choices.js para select buscable -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 
-    <!-- DataTables -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
-  
-</head>
-<body>
   <main>
     <h2>Equipos</h2>
 

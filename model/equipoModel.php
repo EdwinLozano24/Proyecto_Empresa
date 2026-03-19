@@ -194,6 +194,33 @@ class EquipoModel {
     }
 
     /**
+     * Obtiene los últimos N equipos en mantenimiento
+     */
+    public function obtenerUltimosEnMantenimiento($limite = 3) {
+        $sql = "SELECT 
+                    e.Id_Equipo,
+                    e.Marca_Equipo,
+                    e.Numero_Serie,
+                    e.Ubicacion_Equipo,
+                    e.Propietario_Equipo,
+                    CONCAT(emp.Nombre_Empleado, ' ', IFNULL(emp.Apellido_Empleado, '')) AS Propietario_Nombre,
+                    e.Estado_Equipo,
+                    e.Fecha_Ad_Equipo,
+                    te.Nombre_Tipo_Equipo,
+                    e.Id_Tipo_Equipo
+                FROM tbl_equipos e
+                LEFT JOIN tbl_empleado emp ON e.Propietario_Equipo = emp.Id_Empleado
+                LEFT JOIN tbl_tipo_equipo te ON e.Id_Tipo_Equipo = te.Id_Tipo_Equipo
+                WHERE e.Estado_Equipo = 'Mantenimiento'
+                ORDER BY e.Id_Equipo DESC
+                LIMIT ?";
+        
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->execute([$limite]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
      * Búsqueda avanzada de equipos con múltiples filtros
      */
     public function buscar($filtros) {

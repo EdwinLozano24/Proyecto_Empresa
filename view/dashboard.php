@@ -1,24 +1,18 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <title>Dashboard Inventario - Gradezco</title>
-  <?php
+<?php
     // Proteger la página - requiere autenticación
     require_once __DIR__ . '/../app/protecciones.php';
     protegerPagina();
     
-    // Headers para evitar caché del navegador
-    header('Cache-Control: no-cache, no-store, must-revalidate');
-    header('Pragma: no-cache');
-    header('Expires: 0');
-    
     // Obtener datos del usuario actual
     $usuario = UsuarioController::obtenerUsuarioActual();
+    
+    // Variables para el header
+    $pageTitle = 'Dashboard Inventario';
+    $activeTab = 'Dashboard';
+    $cssUrl = '/inventario_equipos/assets/css/Dashboard.css';
+    
+    // Incluir el header común
+    require_once 'header.php';
     
     // Contar empleados reales desde la base de datos
     $empleados_count = 0;
@@ -43,6 +37,9 @@
       $equipos_inactivos = $equipoModel->contarPorEstado('Inactivo');
       $equipos_mantenimiento = $equipoModel->contarPorEstado('Mantenimiento');
       $equipos_dado_baja = $equipoModel->contarPorEstado('Dado de Baja');
+
+      // Obtener últimos equipos en mantenimiento
+      $ultimos_mantenimiento = $equipoModel->obtenerUltimosEnMantenimiento(3);
 
       $stmt = $pdo->query("SELECT COUNT(DISTINCT Ubicacion_Equipo) AS total FROM tbl_equipos WHERE Ubicacion_Equipo IS NOT NULL AND Ubicacion_Equipo <> ''");
       $row = $stmt->fetch();
@@ -81,54 +78,11 @@
     } catch (PDOException $e) {
       // Si falla la conexión, se usan valores por defecto (0)
     }
-    
-    // Usar el CSS estilizado
-    $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/Dashboard.css';
-    $cssUrl = '/inventario_equipos/assets/css/Dashboard.css';
-    if (file_exists($cssPath)) {
-        echo '<link rel="stylesheet" href="' . $cssUrl . '">';
-    } else {
-        echo '<!-- CSS File not found at: ' . $cssPath . ' -->';
-    }
     ?>
-</head>
 
-<body>
-  <header>
-    <div class="header-container">
-      <div class="logo-section">
-        <div class="logo-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-          </svg>
-        </div>
-        <div class="logo-info">
-          <h1>Gradezco</h1>
-          <p>Sistema de Inventario de Equipos</p>
-        </div>
-      
-      
-      <!-- Usuario autenticado -->
-      <div class="user-info" style="display: flex; align-items: center; gap: 15px;">
-        <div style="text-align: right; color: white;">
-          <p style="margin: 0; font-weight: 600;"><?php echo htmlspecialchars($usuario['nombre']); ?></p>
-          <p style="margin: 0; font-size: 12px; opacity: 0.9;"><?php echo htmlspecialchars($usuario['rol'] ?? 'Usuario'); ?></p>
-        </div>
-        <a href="/inventario_equipos/controller/cerrarSesion.php" style="color: white; text-decoration: none; padding: 8px 15px; background: rgba(255,255,255,0.2); border-radius: 4px; font-size: 14px;">
-          Cerrar Sesión
-        </a>
-      </div>
+  <main>
 
-      <nav class="nav-tabs">
-        <button class="nav-tab active">Dashboard</button>
-        <a href="/inventario_equipos/controller/equipoController.php?accion=listar" class="nav-tab">Equipos</a>
-        <a href="/inventario_equipos/controller/mantenimientoController.php?accion=listar" class="nav-tab">Mantenimiento</a>
-        <a href="/inventario_equipos/controller/usuarioAdminController.php?accion=listar" class="nav-tab">Usuarios</a>
-        <a href="/inventario_equipos/controller/empleadoController.php?accion=listar" class="nav-tab">Empleados</a>
-        <a href="/inventario_equipos/controller/historialController.php?accion=listar" class="nav-tab">Historial</a>
-      </nav>
-    </div>
+
   </header>  <main>
     <!-- Stats Grid -->
     <div class="stats-grid">
@@ -219,8 +173,8 @@
           </div>
         </div>
         <div class="feature-buttons">
-          <button class="btn btn-primary">Nuevo Equipo</button>
-          <button class="btn btn-secondary">Ver Reportes</button>
+          <a href="/inventario_equipos/view/equipoForm.php" class="btn btn-primary" style="text-decoration: none;">Nuevo Equipo</a>
+          <a href="/inventario_equipos/controller/historialController.php?accion=listar" class="btn btn-secondary" style="text-decoration: none;">Ver Reportes</a>
           <a href="/inventario_equipos/controller/usuarioAdminController.php?accion=listar" class="btn btn-outline" style="margin-left:8px; text-decoration:none; display:inline-block; padding:8px 12px; border-radius:4px; border:1px solid #ccc; color:inherit;">Usuarios</a>
         </div>
       </div>
@@ -234,30 +188,36 @@
           <span class="card-icon">🔧</span>
         </div>
         <div class="maintenance-list">
-          <div class="maintenance-item">
-            <span class="status-dot warning"></span>
-            <div class="maintenance-info">
-              <h4>Laptop HP ProBook 450</h4>
-              <p>LAP-2024-001 • Hace 2 días</p>
+          <?php if (!empty($ultimos_mantenimiento)): ?>
+            <?php foreach ($ultimos_mantenimiento as $equipo): ?>
+              <div class="maintenance-item">
+                <span class="status-dot warning"></span>
+                <div class="maintenance-info">
+                  <h4><?php echo htmlspecialchars($equipo['Marca_Equipo']); ?></h4>
+                  <p><?php echo htmlspecialchars($equipo['Numero_Serie']); ?> • <?php 
+                    $fecha = new DateTime($equipo['Fecha_Ad_Equipo']);
+                    $ahora = new DateTime();
+                    $diferencia = $ahora->diff($fecha);
+                    if ($diferencia->days == 0) {
+                      echo 'Hoy';
+                    } elseif ($diferencia->days == 1) {
+                      echo 'Hace 1 día';
+                    } else {
+                      echo 'Hace ' . $diferencia->days . ' días';
+                    }
+                  ?></p>
+                </div>
+                <span class="maintenance-status process">En proceso</span>
+              </div>
+            <?php endforeach; ?>
+          <?php else: ?>
+            <div class="maintenance-item">
+              <div class="maintenance-info">
+                <h4>No hay equipos en mantenimiento</h4>
+                <p>Todos los equipos están operativos</p>
+              </div>
             </div>
-            <span class="maintenance-status process">En proceso</span>
-          </div>
-          <div class="maintenance-item">
-            <span class="status-dot success"></span>
-            <div class="maintenance-info">
-              <h4>Monitor Dell 24"</h4>
-              <p>MON-2024-045 • Hace 3 días</p>
-            </div>
-            <span class="maintenance-status completed">Completado</span>
-          </div>
-          <div class="maintenance-item">
-            <span class="status-dot info"></span>
-            <div class="maintenance-info">
-              <h4>Impresora Canon MF445</h4>
-              <p>IMP-2024-012 • Hace 5 días</p>
-            </div>
-            <span class="maintenance-status scheduled">Programado</span>
-          </div>
+          <?php endif; ?>
         </div>
       </div>
     </div>

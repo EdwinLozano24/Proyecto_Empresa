@@ -4,6 +4,23 @@ require_once __DIR__ . '/../app/protecciones.php';
 protegerPagina();
 verificarRol('Administrador');
 
+// Obtener datos del usuario actual
+$usuario = UsuarioController::obtenerUsuarioActual();
+
+// Variables para el header
+$pageTitle = 'Usuarios';
+$activeTab = 'Usuarios';
+$cssUrl = '/inventario_equipos/assets/css/Usuarios.css';
+
+// Incluir el header común
+require_once 'header.php';
+
+// Enlaces CSS adicionales para usuarios
+?>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<?php
+
 // Si la vista se abre directamente y no viene del controlador, cargar usuarios
 if (!isset($usuarios)) {
   require_once __DIR__ . '/../app/conexion.php';
@@ -21,29 +38,7 @@ if (!isset($usuarios)) {
   }
 }
 ?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Usuarios - Administración</title>
-  <?php
-    // Usar el CSS estilizado
-    $cssPath = $_SERVER['DOCUMENT_ROOT'] . '/inventario_equipos/assets/css/Usuarios.css';
-    $cssUrl = '/inventario_equipos/assets/css/Usuarios.css';
-    if (file_exists($cssPath)) {
-        echo '<link rel="stylesheet" href="' . $cssUrl . '">';
-    } else {
-        echo '<!-- CSS File not found at: ' . $cssPath . ' -->';
-    }
-    ?>
-    <!-- Choices.js para select buscable -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 
-    <!-- DataTables -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
-</head>
-<body>
   <main>
     <h2>Usuarios</h2>
     <?php if (isset($_SESSION['exito_usuario'])): ?>
